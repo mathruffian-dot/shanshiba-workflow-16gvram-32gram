@@ -1,0 +1,13 @@
+{
+ "tier": "t3",
+ "bg": 12,
+ "rc": 0,
+ "total_s": 1992,
+ "vram_peak_mib": 14691,
+ "sys_avail_min_gib": 0.48,
+ "last_progress": [
+  "2",
+  "2",
+  "00:12"
+ ]
+}
