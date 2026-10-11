@@ -32,6 +32,7 @@
 5. 確認：`python cloud/colab_h3.py check` 會顯示餘額。
 
 > **預設 `start`＝完整安裝**（2026-10-11 起）：跟第一份 repo 完整版（32GB 顯卡＋64GB 記憶體）一樣，語音三環境、ComfyUI（H3、Qwen、Music 3、FlashVSR）、中文字型全部裝，約 10.5 分鐘、約 1.5 單元；G4 有 96GB 顯存，完整版的設定都跑得動。只要 H3 的人加 `--h3-only`（約 3.7 分鐘）。
+> **兩種安裝都開 2 個 ComfyUI**（2026-10-11 起，完整安裝原本只開 1 個）：各 `--reserve-vram 46`、第二個晚 30 秒開工＝實測最快（每小時 123 支，見 §4）。要單一個就 `start --instances 1`（完整安裝用環境變數 `H3_INSTANCES`）。開完可以看 `/content/h3_state.json` 有沒有列出 2 個。
 
 ## 2. 只有 H3 上雲端（本機能做首幀和配音）
 
@@ -39,11 +40,12 @@
 python cloud/colab_h3.py start --h3-only           # 開 G4、只裝 ComfyUI＋H3（約 3.5–4 分鐘）、開 2 個 ComfyUI
 python cloud/colab_h3.py batch S01/spec.json S02/spec.json ...   # 打包上傳 → 雲端跑 → 成品下載回各 spec 旁邊
 python cloud/colab_h3.py keepalive --minutes 20    # （選用）審片時保住機器
-python cloud/colab_h3.py stop                      # 用完一定要關
+python cloud/colab_h3.py stop                      # 確定不再需要 H3 才關（見下方「什麼時候關機」）
 ```
+- **什麼時候關機（2026-10-11 實作定案）**：拍完 → 自己（或 agent）看接觸表 → 要重拍就直接送到**同一台**，中間**不要關機、不要用 `--stop-after`**（重開只裝 H3 要約 4 分鐘、完整安裝約 10 分鐘，比開著等更花時間）。**看完重拍、確定都不需要再用 H3，要交給人工審片了，才 `stop`。** 審片超過約 15 分鐘才回來就先 `keepalive`，否則閒置約 20 分鐘會被收回。
 - `batch` 吃的就是 `tools/h3_shot.py` 的分鏡 JSON；首幀、配音、參考圖等檔案會自動一起打包（相對路徑以 spec 所在資料夾為準）。成品放在 spec 旁邊：檔名是 `spec.json` 就放同一個資料夾，否則放在同名資料夾。
 - **多鏡範本自動判斷**：`pipeline/template_local/make_film.py` 偵測到本機顯卡跑不動 H3（不到 15GB 顯存或 30GB 記憶體）時，h3／amb 兩步會自動整批送到 Colab；也可以用 `set H3_BACKEND=colab`（或 `local`、`both`＝本機＋Colab 一起跑，見 §3b）強制。只跑 h3 時本機不必開 ComfyUI。
-- 沒開機就直接 `batch` 會自動先 `start`（預設完整安裝；只要 H3 就 `batch --h3-only …`）；加 `--stop-after` 跑完自動關機。
+- 沒開機就直接 `batch` 會自動先 `start`（預設完整安裝；只要 H3 就 `batch --h3-only …`）；加 `--stop-after` 跑完自動關機——**只用在最後一批**（確定不會再重拍），審片重拍的來回中間不要用。
 
 ## 3. 全雲端（本機什麼都跑不動）
 
@@ -55,7 +57,7 @@ python cloud/colab_h3.py film pipeline/template_local voices h3 amb edl music en
 python cloud/colab_h3.py stop
 ```
 - **2026-10-10 新 agent 實測（只看本 repo、從零）**：`full-setup` **約 10.5 分鐘**（VM 端 540 秒；10 份模型清單約 8 分鐘）→ `smoke` 約 13 分鐘 → 範本片〈被狗吃掉的作業〉分三段 `film` 共約 28 分鐘，成片 38.5 秒 1080p、−15.9 LUFS，自審全過；G4 開機到關機約 54 分鐘、**約 8 個運算單元**。Colab 硬碟約 236GB，裝完剩約 40–80GB。
-- 全雲端模式只有 1 個 ComfyUI，還要跟 Qwen、Music 3 輪流換模型，所以 H3 每鏡約 70 秒（smoke 第一支冷載入 230 秒），比「只有 H3 上雲端」的 42 秒慢。**`film` 現在跑到 h3／amb 時會自動改成 2 個 ComfyUI 錯開跑（`cloud/vm/parallel_h3.py`，`H3_PARALLEL=2`），跑完恢復 1 個**；長片才看得出差別。
+- 全雲端模式**現在預設也開 2 個 ComfyUI**（2026-10-11 起；之前只有 1 個，還要跟 Qwen、Music 3 輪流換模型，H3 每鏡約 70 秒）。`film` 跑到 h3／amb 時用 2 個 ComfyUI 錯開跑（`cloud/vm/parallel_h3.py`，`H3_PARALLEL=2`）。2026-10-11 實戰：完整安裝後 `batch` 25 鏡 1 個 ComfyUI 跑 1594 秒（含上傳下載）→ 之後改 2 個。
 - 範本可以直接跑 `pipeline/template_local`；做自己的片時照 `pipeline/template_local/README.md` 複製成 `pipeline/<片名>/`，再 `film pipeline/<片名> …`（資料夾一定要在 repo 裡面）。
 - 每個人工關卡（首幀、H3 接觸表、成片）之間，`film` 會把 `out/` 下載回來給你看；改了要重做的檔案刪掉，再跑下一段，`film` 會把整個片子資料夾重新上傳，從斷點接著做。
 - **本機設的 `ONLY`（只重做某幾鏡）、`ALLOW_REVIEW`、`UPSCALE` 會自動帶到 VM**；其他設定用 `--env KEY=VALUE`（例：`film pipeline/template_local h3 --env ONLY=S3`）。
@@ -115,7 +117,7 @@ python pipeline/template_local/make_film.py h3 amb # 或直接：python cloud/hy
 
 - **Colab 閒置約 20 分鐘會自動收回機器**（實測：最後一次下指令後約 18–20 分鐘；機器上有程式在等待也一樣）。所以：
   - 忘了關機最多浪費約 3 單元；
-  - 審片加修改 **4 分鐘內**能回來就開著（重開要等約 4 分鐘、約 0.55 單元，跟開著等差不多）；超過 20 分鐘沒動作機器會被收回，回來重新 `start` 即可；
+  - 拍片過程中（拍完 → 檢查 → 重拍）**一律開著**，等「確定不再需要 H3、要交給人工審片」才關（重開只裝 H3 約 4 分鐘、完整安裝約 10 分鐘）；超過 20 分鐘沒動作機器會被收回，回來重新 `start` 即可；
   - 要多保一會用 `keepalive`（照樣扣單元）。
 - `batch` 執行期間每 45 秒查一次進度，順便維持連線。H3 正在跑但完全不查進度會不會被收回，未測。
 - 單元 **90 天後失效**；買太多用不完會浪費。

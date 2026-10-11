@@ -4,11 +4,11 @@ Needs: the Colab CLI (uv tool install google-colab-cli; Windows also: python clo
 once with the Google account that has the Google AI plan (or Colab pay-as-you-go compute units). Standard library only.
 
   python cloud/colab_h3.py check                       # CLI works? balance? which GPUs?
-  python cloud/colab_h3.py start                       # DEFAULT = full install, same as the full 32G repo (voice, Qwen, Music 3, H3, FlashVSR; ~10.5 min)
+  python cloud/colab_h3.py start                       # DEFAULT = full install, same as the full 32G repo (voice, Qwen, Music 3, H3, FlashVSR; ~10.5 min), 2 ComfyUI instances
   python cloud/colab_h3.py start --h3-only             # only ComfyUI + H3 (~3.7 min), 2 ComfyUI instances: local prep + cloud H3, or hybrid
   python cloud/colab_h3.py batch a/spec.json b/spec.json ...   # upload -> render on the VM -> download clips next to each spec
   python cloud/colab_h3.py keepalive --minutes 30      # keep the VM while you review (Colab reclaims it after ~20 min idle)
-  python cloud/colab_h3.py stop                        # always stop when done - an idle G4 still costs 8.9 units/hour
+  python cloud/colab_h3.py stop                        # stop once no more H3 is needed (before handing the cut to a human reviewer); keep it up between batch/review/retake - an idle G4 costs 8.9 units/hour, a reinstall 4-10 min
   python cloud/colab_h3.py full-setup                  # same as the default start (kept as an alias)
   python cloud/colab_h3.py smoke                       # after the full install: run setup/smoke_test.py on the VM, download smoke_out/
   python cloud/colab_h3.py film pipeline/template_local [stage ...]   # after the full install: run make_film.py on the VM, sync out/ back
@@ -280,7 +280,8 @@ def cmd_full_setup(a):
     tgz = repo_bundle(full=True)
     upload(a.name, tgz, "/content/repo.tgz")
     vm_sh(a.name, "cd /content/repo && tar xzf /content/repo.tgz && echo ok")
-    vm_sh(a.name, "cd /content && AI_ROOT=/content/AI REPO=/content/repo nohup bash /content/repo/cloud/vm/install_full.sh > /content/install_full.log 2>&1 &")
+    vm_sh(a.name, f"cd /content && AI_ROOT=/content/AI REPO=/content/repo H3_INSTANCES={getattr(a, 'instances', 2)} "
+                  "nohup bash /content/repo/cloud/vm/install_full.sh > /content/install_full.log 2>&1 &")
     poll(a.name, "/content/install_full.log", "FULL_DONE", every=60)
     vm_sh(a.name, "echo SETUP_DONE >> /content/setup_h3.log")      # batch/film can reuse this VM
     print("[colab] 全套環境裝好了（之後可以用 smoke／film／batch）", flush=True)
@@ -347,7 +348,7 @@ def main():
             p.add_argument("--encoder", default="heretic", choices=["heretic", "nvfp4"])
         if c == "batch":
             p.add_argument("specs", nargs="+", help="h3_shot spec files (outputs go next to each: <dir>/ for spec.json, else <name>/)")
-            p.add_argument("--stop-after", action="store_true", help="stop the VM when the batch is downloaded")
+            p.add_argument("--stop-after", action="store_true", help="stop the VM when the batch is downloaded - only for the LAST batch: while reviewing / retaking keep the VM up (reinstall costs 4-10 min)")
     sub.add_parser("keepalive").add_argument("--minutes", type=int, default=30)
     sub.add_parser("stop"); sub.add_parser("status"); sub.add_parser("smoke")
     p = sub.add_parser("film"); p.add_argument("film_dir"); p.add_argument("stages", nargs="*")

@@ -79,12 +79,30 @@ wait $DLPID
 python "$REPO/tools/dmad_lora_convert.py" "$C/models/loras/dmad_raw/dmad_minimax_h3_4step_lora_critic.safetensors" \
        "$C/models/loras/dmad_h3_4step_lora_critic_comfy.safetensors" >/dev/null && echo "[full] dmad converted"
 
-# --- one ComfyUI, models stay loaded (no --cache-none: the VM has the memory)
+# --- N ComfyUI instances (default 2 = best throughput on G4: --reserve-vram 46 each, models stay loaded, no --cache-none;
+#     run_batch.py starts the 2nd instance's jobs 30 s later). H3_INSTANCES=1 for a single instance. (2026-10-11: user wants 2 by default)
+N=${H3_INSTANCES:-2}
+RES=""; [ "$N" -eq 2 ] && RES="--reserve-vram 46"; [ "$N" -ge 3 ] && RES="--reserve-vram 62"
 pkill -f 'main.py --listen'; sleep 2
-cd "$C" && nohup python main.py --listen 127.0.0.1 --port 8188 --disable-auto-launch --preview-method none --fast fp16_accumulation \
-  > /content/comfy_0.log 2>&1 &
-for i in $(seq 1 300); do curl -s -o /dev/null http://127.0.0.1:8188/system_stats && break; sleep 1; done
-echo "{\"instances\": [{\"dir\": \"$C\", \"port\": 8188}], \"encoder\": \"heretic\", \"full\": true}" > /content/h3_state.json
+INST=""
+for i in $(seq 0 $((N-1))); do
+  if [ "$i" -eq 0 ]; then D="$C"; else
+    D="/content/ComfyUI_$i"
+    if [ ! -d "$D" ]; then                       # own input/output/user/temp folders, shared models (top level only)
+      mkdir -p "$D"
+      for f in "$C"/* "$C"/.[!.]*; do b=$(basename "$f"); case "$b" in models|input|output|user|temp|'.[!.]*') ;; *) cp -a "$f" "$D/" ;; esac; done
+      ln -s "$C/models" "$D/models"
+    fi
+  fi
+  PORT=$((8188 + i))
+  (cd "$D" && nohup python main.py --listen 127.0.0.1 --port $PORT --disable-auto-launch --preview-method none --fast fp16_accumulation $RES      > /content/comfy_$i.log 2>&1 &)
+  INST="$INST${INST:+, }{\"dir\": \"$D\", \"port\": $PORT}"
+done
+for i in $(seq 0 $((N-1))); do
+  for t in $(seq 1 300); do curl -s -o /dev/null http://127.0.0.1:$((8188 + i))/system_stats && break; sleep 1; done
+done
+echo "[full] comfy instances: $N"
+echo "{\"instances\": [$INST], \"encoder\": \"heretic\", \"full\": true}" > /content/h3_state.json
 df -h /content | tail -1
 mark ALL
 echo FULL_DONE
