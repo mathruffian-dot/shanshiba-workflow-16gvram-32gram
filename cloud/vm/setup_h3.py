@@ -1,4 +1,4 @@
-"""Runs ON the Colab VM (started by cloud/colab_h3.py start): ComfyUI 0.37.0 + MiniMax H3 + DMAD, then N ComfyUI instances.
+"""Runs ON the Colab VM (started by cloud/colab_h3.py start): ComfyUI 0.40.0 + MiniMax H3 + DMAD + Veda sparse attention (2026-10-16), then N ComfyUI instances.
 Measured on a Colab G4 (RTX PRO 6000 Blackwell, 2026-10-10): about 3.5 minutes from a fresh VM to ready;
 best throughput = 2 instances, --reserve-vram 46 each, models kept loaded (no --cache-none), second instance's jobs start 30 s later.
 Uses the VM's own torch (2.11) - same H3 result as the Windows/torch 2.14 install (PSNR 45.9 dB vs Desk 5090).
@@ -39,7 +39,7 @@ mark("gpu", sh("nvidia-smi --query-gpu=name,memory.total --format=csv,noheader")
 
 # 1. models (background): H3 core + text encoder + DMAD lora_critic, via the repo's download.py (16 streams per file, SHA-256)
 man = []
-for f in ["downloads.json", "downloads_uncensored.json" if a.encoder == "heretic" else None, "downloads_dmad.json"]:
+for f in ["downloads.json", "downloads_uncensored.json" if a.encoder == "heretic" else None, "downloads_dmad.json", "downloads_veda.json"]:
     if f:
         man += json.loads((REPO / "setup" / f).read_text(encoding="utf-8-sig"))
 man = [x for x in man if not ("nvfp4" in x["destination"] and a.encoder == "heretic") and "full_critic" not in x["destination"]]
@@ -47,13 +47,14 @@ Path("/content/h3_models.json").write_text(json.dumps(man, indent=1))
 dl = subprocess.Popen(f"AI_ROOT={AI} python {REPO}/setup/download.py /content/h3_models.json > /content/h3_download.log 2>&1", shell=True)
 mark("downloads_started", f"{len(man)} files, {round(sum(x['size'] for x in man) / 1e9, 1)} GB")
 
-# 2. ComfyUI 0.37.0 + packages with uv on the VM's python (keeps Colab's torch)
+# 2. ComfyUI 0.40.0 (+ Veda node) + packages with uv on the VM's python (keeps Colab's torch)
 if not (C / "main.py").exists():
-    sh(f"git clone -q --depth 1 --branch v0.37.0 https://github.com/comfyanonymous/ComfyUI /content/ComfyUI_src"
+    sh(f"git clone -q --depth 1 --branch v0.40.0 https://github.com/comfyanonymous/ComfyUI /content/ComfyUI_src"
        f" && mkdir -p {C} && cp -rn /content/ComfyUI_src/. {C}/")
     sh("pip install -q uv")
     sh(f"grep -viE '^(torch|torchvision|torchaudio)([=<> ]|$)' {C}/requirements.txt > /content/req_comfy.txt"
-       f" && uv pip install --system -q -r /content/req_comfy.txt comfy-kitchen==0.2.35")
+       f" && uv pip install --system -q -r /content/req_comfy.txt comfy-kitchen==0.2.37")
+    sh("git clone -q https://github.com/veda-sparse/Veda-on-ComfyUI " + str(C) + "/custom_nodes/Veda-on-ComfyUI && git -C " + str(C) + "/custom_nodes/Veda-on-ComfyUI checkout -q 67e4eb5541b648555563144401ebaba832bd73ec")
     sh(f"sed 's#C:/AI/H3/models#{AI}/H3/models#' {REPO}/setup/extra_model_paths.yaml > {C}/extra_model_paths.yaml")
 mark("comfy_installed")
 dl.wait()

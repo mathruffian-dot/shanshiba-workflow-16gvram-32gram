@@ -163,7 +163,7 @@ python pipeline/template_local/make_film.py h3 amb # 或直接：python cloud/hy
 | `colab_h3.py` | 你的電腦 | 開機、裝環境、批次跑 H3、保持連線、關機、全雲端 smoke／film（只用 Python 標準函式庫） |
 | `hybrid_h3.py` | 你的電腦 | 本機＋Colab 一起跑 H3（共用佇列；`H3_BACKEND=both`；尚未實測） |
 | `colab_cli_windows_patch.py` | 你的電腦（Windows） | 讓 Colab CLI 在 Windows 上能啟動 |
-| `vm/setup_h3.py` | Colab | ComfyUI 0.37＋H3＋DMAD，開 1–3 個 ComfyUI（預設 2 個、錯開） |
+| `vm/setup_h3.py` | Colab | ComfyUI 0.40＋H3＋DMAD＋Veda（2026-10-16），開 1–3 個 ComfyUI（預設 2 個、錯開） |
 | `vm/run_batch.py` | Colab | 把一批鏡頭分給各個 ComfyUI 跑，寫進度、打包成品 |
 | `vm/install_full.sh` | Colab | 全雲端：語音三環境＋ComfyUI 全套＋字型＋全部模型 |
 

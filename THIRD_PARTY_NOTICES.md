@@ -20,6 +20,7 @@
 |---|---|---|---|---|
 | MiniMax H3（Ref2VA 權重，含 Comfy-Org 重新打包版） | MiniMax H3 Community License Agreement（2026-08-02） | 可以（年營收 > 2,000 萬美元需書面授權） | 排除美、歐盟、英、南韓；商業產品顯著標示「MiniMax H3」；公開內容標示機器生成；不得用產出改進其他 AI 模型；轉散布須附授權全文與 NOTICE：「MiniMax H3 is licensed under the MiniMax H3 Community License Agreement, Copyright © 2026 MiniMax. All Rights Reserved.」產出歸使用者 | https://huggingface.co/MiniMaxAI/MiniMax-H3/blob/main/LICENSE |
 | DMAD 4 步 LoRA（`minimax_h3/`） | 沿用 MiniMax H3 Community License（衍生作品） | 同 H3 | 同 H3 | https://huggingface.co/ZhengmingYu/DMAD |
+| Veda R2VA 打分器（`minimax_h3_r2va_veda_preview_fp8`，Colab 版自動下載；2026-10-16 加入） | 沿用 MiniMax H3 Community License（作者標示） | 同 H3 | 同 H3 | https://huggingface.co/Veda-Sparse/Minimax-H3-R2VA-Veda-Preview |
 | H3 Fun ControlNet patches | 沿用 MiniMax H3 Community License | 同 H3 | 同 H3 | https://huggingface.co/alibaba-pai/MiniMax-H3-Fun-Controlnet-Union-2.0 |
 | Qwen3-VL-32B Heretic 文字編碼器（ethanfel，INT8 ConvRot） | Apache-2.0（上游 Qwen3-VL-32B-Instruct 亦 Apache-2.0） | 可以 | 保留授權；與 H3 併用時 H3 使用規範照樣適用 | https://huggingface.co/ethanfel/Qwen3-VL-32B-Ultra-Heretic-H3-ComfyUI-INT8-ConvRot |
 | **Qwen-Image 2.1**（含 Comfy-Org 版） | **Qwen RESEARCH LICENSE AGREEMENT** | **不可以**（僅研究／評估；商用請洽 model-business@notice.qwencloud.com） | 轉散布附授權全文與聲明「Qwen is licensed under the Qwen RESEARCH LICENSE AGREEMENT, Copyright (c) 2026 Hangzhou Tongyi Laboratory Technology Co., Ltd. All Rights Reserved.」；用它做或改進模型須標「Built with Qwen」 | https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE |
@@ -43,6 +44,7 @@
 |---|---|---|---|
 | ComfyUI | GPL-3.0 | 本 repo 不含 ComfyUI；大多數腳本只透過 HTTP API 呼叫它。**`tools/flashvsr_cli.py` 執行時會直接 import ComfyUI 與 FlashVSR 節點（GPL-3.0）的程式碼，因此該檔以 GPL-3.0-or-later 授權** | https://github.com/comfyanonymous/ComfyUI |
 | ComfyUI-FlashVSR_Ultra_Fast 節點 | GPL-3.0 | 同上 | https://github.com/lihaoyun6/ComfyUI-FlashVSR_Ultra_Fast |
+| Veda-on-ComfyUI 節點（稀疏注意力；需要 ComfyUI ≥ 0.38） | MIT（INT8 核心改寫自 SageAttention v1，BSD-3-Clause） | 本 repo 不含；Colab 安裝時下載 | https://github.com/veda-sparse/Veda-on-ComfyUI |
 | Nvidia_RTX_Nodes_ComfyUI | Apache-2.0 | — | https://github.com/Comfy-Org/Nvidia_RTX_Nodes_ComfyUI |
 | nvidia-vfx（RTX Video Super Resolution） | NVIDIA 專有授權 | 不可放進 repo，請使用者自行 `pip install` | https://pypi.org/project/nvidia-vfx/ |
 | ostris/ai-toolkit | MIT（Copyright (c) 2024 Ostris, LLC） | 保留聲明 | https://github.com/ostris/ai-toolkit |

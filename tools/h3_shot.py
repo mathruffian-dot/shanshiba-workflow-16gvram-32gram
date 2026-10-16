@@ -278,6 +278,32 @@ def req(path, data=None, timeout=60):
         return json.loads(f.read().decode())
 
 
+# Veda sparse attention (2026-10-16; needs ComfyUI >= 0.38 + custom_nodes/Veda-on-ComfyUI + setup/downloads_veda.json).
+# Measured on a Colab G4: shots <= 5 s about 3% faster, 12 s shots 29% (DMAD 4 steps) / 39% (14 steps) faster, no visible quality loss.
+# ON automatically for shots >= 7 s (H3_VEDA_MIN_SEC) when the server has the node (local 5090: 4.5 s shot +10% slower, 12 s shot -29%);
+# spec "veda": true/false or env H3_VEDA=1/0 forces it.
+VEDA_PREDICTOR = os.environ.get("H3_VEDA_PREDICTOR", "minimax_h3_r2va_veda_preview_fp8.safetensors")
+VEDA_MIN_SEC = float(os.environ.get("H3_VEDA_MIN_SEC", "7"))   # auto-on only for shots >= 7 s; spec "veda": true/false or H3_VEDA=1/0 forces
+_VEDA_AVAILABLE = None
+
+
+def use_veda(spec):
+    global _VEDA_AVAILABLE
+    if spec.get("veda") is False or os.environ.get("H3_VEDA", "") == "0":
+        return False
+    forced = spec.get("veda") is True or os.environ.get("H3_VEDA", "") == "1"
+    if not forced and float(spec.get("duration", 0)) < VEDA_MIN_SEC:   # short shots: no gain (local 5090 +10% slower at 4.5 s)
+        return False
+    if not forced and spec.get("control"):   # with Fun ControlNet (skeleton/depth) Veda smeared fast arms and lost the crossed-leg pose (2026-10-16)
+        return False
+    if _VEDA_AVAILABLE is None:
+        try:
+            _VEDA_AVAILABLE = bool(req("/object_info/VedaSparseAttention", timeout=10))
+        except Exception:
+            _VEDA_AVAILABLE = False
+    return _VEDA_AVAILABLE
+
+
 def stage(src, name):
     d = COMFY / "input" / "h3_shot"
     d.mkdir(parents=True, exist_ok=True)
@@ -354,6 +380,10 @@ def build_graph(spec, prompt, base, tag):
         g["50"] = {"class_type": "EasyCache", "inputs": {"model": model, "reuse_threshold": 0.2, "start_percent": 0.15, "end_percent": 0.95, "verbose": True}}
         model = ["50", 0]
         g["9"]["inputs"]["model"] = model
+    if use_veda(spec):  # 2026-10-16: Veda learned sparse attention, last on the MODEL wire (only the guider sees it)
+        g["96"] = {"class_type": "VedaSparseAttention", "inputs": {"model": model, "predictor": VEDA_PREDICTOR, "generated_sparsity": "trained",
+                   "reference_sparsity": "trained", "full_attention_layers": "", "full_attention_steps": "", "verbose": False}}
+        model = ["96", 0]
     i = 0
     if spec.get("first_frame"):
         g["5"] = {"class_type": "LoadImage", "inputs": {"image": stage(base / spec["first_frame"], f"{tag}_first.png")}}

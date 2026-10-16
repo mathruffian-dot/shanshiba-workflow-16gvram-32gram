@@ -22,7 +22,7 @@ json.dump([x for x in json.load(open(sys.argv[1], encoding="utf-8-sig")) if "nvf
 EOF
 (
   cd "$REPO/setup"
-  for m in /content/downloads_h3core.json downloads_uncensored.json downloads_dmad.json downloads_qwen_image.json downloads_qwen_image_edit.json \
+  for m in /content/downloads_h3core.json downloads_uncensored.json downloads_dmad.json downloads_veda.json downloads_qwen_image.json downloads_qwen_image_edit.json \
            downloads_music3.json downloads_flashvsr.json downloads_voxcpm2.json downloads_breezyvoice.json downloads_breeze_tts2.json; do
     t=$(date +%s)
     n=$(basename "$m")
@@ -59,15 +59,16 @@ uv pip install -q --python "$RP" torch==2.9.1 torchaudio==2.9.1 --index-url http
   && echo "[full] breeze env OK" || echo "[full] breeze env FAILED"
 mark voice_envs
 
-# --- ComfyUI 0.37.0 + FlashVSR node on the VM's python (keeps Colab's torch)
+# --- ComfyUI 0.40.0 + FlashVSR node + Veda node (2026-10-16) on the VM's python (keeps Colab's torch)
 if [ ! -f "$C/main.py" ]; then
-  git clone -q --depth 1 --branch v0.37.0 https://github.com/comfyanonymous/ComfyUI /content/ComfyUI_src && mkdir -p "$C" && cp -rn /content/ComfyUI_src/. "$C/"
+  git clone -q --depth 1 --branch v0.40.0 https://github.com/comfyanonymous/ComfyUI /content/ComfyUI_src && mkdir -p "$C" && cp -rn /content/ComfyUI_src/. "$C/"
   git clone -q https://github.com/lihaoyun6/ComfyUI-FlashVSR_Ultra_Fast "$C/custom_nodes/ComfyUI-FlashVSR_Ultra_Fast" \
     && git -C "$C/custom_nodes/ComfyUI-FlashVSR_Ultra_Fast" checkout -q 4820b3f
   grep -viE '^(torch|torchvision|torchaudio)([=<> ]|$)' "$C/requirements.txt" > /content/req_comfy.txt
   [ -f "$C/custom_nodes/ComfyUI-FlashVSR_Ultra_Fast/requirements.txt" ] && \
     grep -viE '^(torch|torchvision|torchaudio)([=<> ]|$)' "$C/custom_nodes/ComfyUI-FlashVSR_Ultra_Fast/requirements.txt" >> /content/req_comfy.txt
-  uv pip install --system -q -r /content/req_comfy.txt comfy-kitchen==0.2.35 && echo "[full] comfy OK" || echo "[full] comfy FAILED"
+  uv pip install --system -q -r /content/req_comfy.txt comfy-kitchen==0.2.37 && echo "[full] comfy OK" || echo "[full] comfy FAILED"
+  git clone -q https://github.com/veda-sparse/Veda-on-ComfyUI "$C/custom_nodes/Veda-on-ComfyUI" && git -C "$C/custom_nodes/Veda-on-ComfyUI" checkout -q 67e4eb5541b648555563144401ebaba832bd73ec && echo "[full] veda node OK"
   sed "s#C:/AI/H3/models#$AI/H3/models#" "$REPO/setup/extra_model_paths.yaml" > "$C/extra_model_paths.yaml"
 fi
 mark comfy
