@@ -33,13 +33,15 @@ YouTube 頻道「山獅霸的多重宇宙」的完整製作做法：每支片 1�
 ## 2. 流程一覽
 
 ```
-選題 → 劇本 ─✅─→ 角色定妝照（Qwen-Image 2.1）→ 首幀（Qwen-Image-Edit）─✅─→ 配音候選 → 自動挑音
-     → H3 生成（DMAD 4 步）→ RTX VSR 放大 → 後製（名片、字卡、音效、配樂、字幕）
+選題 → 劇本 ─✅─→ 角色定妝照（Qwen-Image 2.1）→ 首幀（Qwen-Image-Edit）─✅─→ 角色參考音（Breeze 設計，一次）
+     → H3 生成（DMAD 4 步，台詞由 H3 拿角色參考音自己念）→ 聽寫比對台詞 → RTX VSR 放大 → 後製（名片、字卡、音效、配樂、字幕）
      → 組裝 → 片尾 → 自審五遍 → 封面＋YouTube 資訊 ─✅─→ 上片
                                            ✅ = 人工驗收關卡
 ```
 
-全部在本機生成（只有挑音用的「台灣國語答案卷」edge-tts 需要連網，沒網路可改用本地 Breeze）。
+全部在本機生成（只有 BreezyVoice 備案挑音用的「台灣國語答案卷」edge-tts 需要連網，沒網路可改用本地 Breeze）。
+
+> **2026-10-23 預設改變：畫面內的台詞改成「H3 自己念＋角色參考音」**（h3_shot spec 的 `audio.voice_ref`），不再先用 BreezyVoice 配音當固定音軌。原頻道在 RTX 5090 實測（同一場戲三鏡）：聲音像參考音的程度和 TTS 差不多（聲紋 0.66 對 0.68）、三鏡最像同一個人（0.75）、表演比固定音軌生動。BreezyVoice 固定音軌改當備案（H3 念錯抽不出來、數字日期難字、要精準時間點的聲畫同步）。⚠ **本 repo 的成片範本 `make_film.py` 已改成這個預設，但還沒在本 repo 從頭實測**；遇到問題可在 `film.json` 設 `"voice_mode": "fixed"` 退回舊做法。
 每一步用哪支腳本、輸入輸出是什麼：[docs/02_端到端流程.md](docs/02_端到端流程.md)；本地角色與首幀做法：[docs/07_本地角色與首幀.md](docs/07_本地角色與首幀.md)。
 
 **裝好之後先跑全本地示範片** `pipeline/demo_local/run_demo.py`：從零做兩個角色、4 鏡、配音、配樂，約 17 秒成片，證明整條工作流在你的電腦上能跑通。
@@ -59,7 +61,7 @@ docs/
   hardware.md               ⭐ 你這個硬體版本：模型組合、啟動參數、實測數據、風險
 tools/                      全域工具（放到 C:\AI\tools）
   h3_shot.py ⭐             分鏡 JSON → 官方格式提示詞 → 格式檢查 → H3 生成
-  make_breezyvoice.cmd ⭐   台詞配音：BreezyVoice 每句 8 候選 → 聽寫＋腔調自動挑
+  make_breezyvoice.cmd      台詞配音備案：BreezyVoice 每句 8 候選 → 聽寫＋腔調自動挑（預設改由 H3 自己念）
   gen_image.py              本機 Qwen-Image 2.1／Qwen-Image-Edit 生圖
   start_comfy.cmd           啟動 ComfyUI
   img25.py                  OpenAI Image 2.5 生圖／編輯（選用，雲端）
@@ -90,10 +92,10 @@ configs/profile.cmd         這個硬體版本的環境變數
 | 2 | 角色定妝照（單張、灰底、半身） | `gen_image.py`（Qwen-Image 2.1） | `docs/07` §1 | `chars/<角色>.png` | ✅ 挑一張定案 |
 | 3 | 場景母版（空景，之後裁成各鏡景別） | `gen_image.py` | `docs/07` §4 | `masters/*.png` | |
 | 4 | 首幀（附定妝照＋母版裁切，**每鏡照抄角色完整外觀描述**） | `gen_image.py --model qwen-edit --ref` | `docs/07` §2–3 | `first/<鏡>.png` | ✅ 逐張看：臉、服裝、多手多腳、背景有沒有字 |
-| 5 | 角色聲音（一次）→ 台詞配音 | `breeze_batch.py`（設計參考音）→ `make_breezyvoice.cmd` | `docs/03` §5 | `bv/<句>.wav`（已去頭尾靜音） | `needs_review` 的句子聽一次 |
-| 6 | H3 每鏡（DMAD 4 步、只給首幀、台詞當固定音軌；看得到臉又沒台詞的鏡給靜音） | `h3_shot.py`（spec 加 `"draft": true`） | `docs/03` §4、`tools/examples/` | `h3/<鏡>/clip.mp4` | ✅ 抽格看：換臉、多人、鏡頭漂移 |
+| 5 | 角色聲音（一次） | `breeze_batch.py`（設計參考音） | `docs/03` §5 | `voice/ref_<角色>.wav` | ✅ 聽一次、定案後不換 |
+| 6 | H3 每鏡（DMAD 4 步、只給首幀；**有台詞給角色參考音 `audio.voice_ref`、H3 自己念**，一鏡一位說話者；看得到臉又沒台詞的鏡給靜音） | `h3_shot.py`（spec 加 `"draft": true`） | `docs/03` §4–5、`tools/examples/` | `h3/<鏡>/clip.mp4` | ✅ 抽格看：換臉、多人、鏡頭漂移；**聽寫比對台詞**（H3 會改用詞） |
 | 7 | 配樂（純器樂、多抽幾個 seed，挑人聲殘留最少的） | `gen_music3.py` → `audio-separator` | `docs/02` §9 | `music/*.flac` | |
-| 8 | 放大、剪接（台詞提前 0.2 秒）、配樂壓低（台詞期間 15–30%）、響度、字幕 | `upscale_vsr.py`、ffmpeg | `docs/02` §7、§10（**響度指令照抄，`alimiter` 要 `level=false`**） | `cut/<片名>_1080p.mp4` | |
+| 8 | 放大、剪接（H3 自己念的台詞不提前；BreezyVoice 備案台詞提前 0.2 秒）、配樂壓低（台詞期間 15–30%）、響度、字幕 | `upscale_vsr.py`、ffmpeg | `docs/02` §7、§10（**響度指令照抄，`alimiter` 要 `level=false`**） | `cut/<片名>_1080p.mp4` | |
 | 9 | 片尾（工具名單＋AI 生成標示） | `templates/ending/render_ending.py` | `templates/ending/README.md` | `ending.mp4` | |
 | 10 | 自審五遍（抽格、ASR、雜訊、黑畫面與響度、切點） | 參考 `pipeline/example_D-7/review.py`、`noise_scan.py`、`stt.py` | `docs/04_自審清單.md` | `review/` | ✅ 最後一定給人看成片 |
 
@@ -109,7 +111,7 @@ configs/profile.cmd         這個硬體版本的環境變數
 4. **單鏡 ≤12 秒**；15 秒會漂移、自己切鏡。
 5. **不說話的鏡頭給靜音引導音軌**，否則角色會自己嘟囔。
 6. **畫面上的中文一律後製疊字**，H3 會把字寫成亂碼。
-7. **台灣腔配音**：Breeze 設計角色聲音（一次）→ **BreezyVoice** 用它念每句台詞（每句 8 候選，約 2.5 秒一個）→ 聽寫全對＋跟台灣國語參考音比聲調自動挑；念不準的字直接標注音（`連假[:ㄐㄧㄚ4]`）。
+7. **台詞讓 H3 拿角色參考音自己念**（2026-10-23 起）：Breeze 設計角色聲音（一次）→ spec 寫 `audio.voice_ref` → 聽寫比對原文（H3 會改用詞，例：「二十四號」→「二十四日」）、抽 2 個 seed。念錯抽不出來的句子才改用 **BreezyVoice** 固定音軌（每句 8 候選、念不準的字標注音 `連假[:ㄐㄧㄚ4]`）。
 8. **低頭、轉身後臉會換人** → 再生一張「動作結束時」的畫面當尾幀鎖住（原頻道用 Image 2.5；本地可用 Qwen-Image-Edit 附定妝照）。
 9. **先做最難的一鏡再批次**，不要整片生完才發現共通問題。
 10. **不合格就重拍到合格**，不靠剪掉躲；給人看並排影片，數字只當備註。
@@ -119,7 +121,7 @@ configs/profile.cmd         這個硬體版本的環境變數
 | 東西 | 原因 | 你要自己準備 |
 |---|---|---|
 | 原頻道的角色定妝照、轉面圖、表情表 | 頻道角色資產 | 用本機 Qwen-Image 2.1 為自己的角色做單張半身定妝照（見 [07_本地角色與首幀.md](docs/07_本地角色與首幀.md)） |
-| 配音參考音 | 含本人授權克隆聲音 | 自己錄或用 Breeze 設計，台詞一律 BreezyVoice |
+| 配音參考音 | 含本人授權克隆聲音 | 自己錄或用 Breeze 設計；台詞預設由 H3 拿參考音自己念，BreezyVoice 為備案 |
 | 模型權重 | 檔案大、各有授權 | 照 [AGENT_SETUP.md](AGENT_SETUP.md) 第 3 節下載（約 150GB） |
 | 成片影片 | 檔案大 | 看頻道 |
 | OpenAI 金鑰（選用） | 預設不用；想改用雲端 Image 2.5 生首幀才需要 | 設環境變數 `OPENAI_API_KEY`，用 `tools/img25.py` |

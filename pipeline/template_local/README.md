@@ -18,8 +18,10 @@
    ```
 4. **人工關卡 1**：看 `out/first/_sheet.jpg`。臉、服裝要一致，不能多手多腳，背景不能有字，窗戶方向要對。不滿意的鏡：刪 `out/first/<鏡>.png`，在 `film.json` 的 `seeds` 加 `"frame_<鏡>": 新數字`，或改該鏡的 `frame` 描述，再跑 `frames`。
 5. `make_film.py voices h3`
-   - 有句子 8 個候選都念錯時程式會停下來：在該句加 `"tts"`，念錯的字後面標注音，例如 `"tts": "老師，連假[:ㄐㄧㄚ4]要去哪？"`。刪掉 `out/voice/bv` 再跑 `voices`。
-   - 單字喊叫這類 ASR 本來就聽不準的句子，人聽過沒問題就用 `set ALLOW_REVIEW=1` 繼續。
+   - **2026-10-23 起預設 `voice_mode: "h3_ref"`**：`voices` 只用 Breeze 設計角色參考音（`out/voice/ref_<角色>.wav`），台詞由 H3 在 `h3` 階段拿參考音自己念；`h3` 結尾自動從成片分離人聲、聽寫、比對原文，結果寫在 `out/voice_picks.json`（`heard`、`match`）。⚠ 這個預設在本範本**還沒從頭實測**（原頻道已在 RTX 5090 實測 H3＋參考音）。
+   - H3 念的和原文差太多時程式會停下來：在 `seeds` 加 `"h3_<鏡>": 新數字`、刪 `out/h3/<鏡>/clip.mp4`，再跑 `set ONLY=<鏡>` → `make_film.py h3`。抽 2–3 次都不對（常見：數字日期、H3 改成大陸用詞），在該句 `line` 加 `"voice_mode": "fixed"`，再跑 `voices h3`（改用 BreezyVoice 固定音軌）。
+   - BreezyVoice（`fixed`）的句子 8 個候選都念錯時程式也會停下來：在該句加 `"tts"`，念錯的字後面標注音，例如 `"tts": "老師，連假[:ㄐㄧㄚ4]要去哪？"`。刪掉 `out/voice/bv` 再跑 `voices`。
+   - 單字喊叫、同音字這類 ASR 本來就聽不準的句子，人聽過沒問題就用 `set ALLOW_REVIEW=1` 繼續。
 6. **人工關卡 2**：看 `out/review/clips_<鏡>.jpg`（每鏡 6 格），檢查有沒有換臉、多出人、鏡頭漂移。不滿意就刪 `out/h3/<鏡>/clip.mp4`，在 `seeds` 加 `"h3_<鏡>": 新數字`，再跑 `set ONLY=S3 S5` → `make_film.py h3`。
 7. `make_film.py amb edl music ending cut review`
 8. **人工關卡 3**：看 `out/review/` 的自審結果，最後**一定要人看完整的** `out/cut/film_1080p.mp4`。
@@ -37,6 +39,7 @@
 | `cine` | 每張首幀開頭的電影感句（底片、鏡頭、光線、調色）。光線要寫具體，只寫 soft daylight 會變平淡白光 |
 | `set_sentence` | 場景參考圖那句，`{n}` 會換成場景圖的編號（角色數＋1） |
 | `frame_suffix` | 每張首幀結尾（不要字、不要浮水印…） |
+| `voice_mode` | 台詞聲音：`"h3_ref"`（預設，H3 拿角色參考音自己念）或 `"fixed"`（舊做法：BreezyVoice 配音當固定音軌）。單句可在 `line` 裡另設 |
 | `h3` | H3 共用設定：`style`、`setting`、`soundscape`（不寫台詞）、`camera`、`constraints`（每鏡都加的限制） |
 | `chars.<代號>` | `name`（字幕顯示）、`look`（**完整外觀描述**，每張首幀都會照抄）、`voice_design`（Breeze 設計聲音的描述）、`voice_sample`（設計聲音時念的句子，也是 BreezyVoice 的參考逐字稿）、`h3_voice`、`edge_voice`（挑音用的台灣國語答案卷聲音）、`sub_color`（字幕顏色，ASS 格式 `&H00BBGGRR`） |
 | `masters.<名稱>` | 場景母版（空景）提示詞。同一個場景的鏡頭都裁同一張母版，空間才一致 |
@@ -53,8 +56,8 @@
 | `id` | 鏡號 |
 | `refs` | 畫面裡的角色代號（依序對應 `<image1>`、`<image2>`…）。**只放畫面裡要演戲的人**，有定義但不入鏡的角色 H3 會把他叫進畫面 |
 | `scene` | `[母版名稱, [x0, y0, x1, y1]]`：從母版裁哪一塊當場景參考（0–1 比例） |
-| `dur` | 秒數（4–12）。有台詞時會自動延長到「開口時間＋台詞長度＋0.8 秒」 |
-| `line` | `{"who", "text", "at"}`：誰說、字幕文字、第幾秒開口；`"tts"`（選填）是送給 BreezyVoice 的寫法（可加注音）。沒台詞寫 `null`（H3 會收到靜音音軌，角色不會自己嘟囔） |
+| `dur` | 秒數（4–12）。有台詞時會自動延長：`h3_ref` 到「開口時間＋估計台詞長度（每秒約 4 字）＋1.2 秒」，`fixed` 到「開口時間＋配音長度＋0.8 秒」 |
+| `line` | `{"who", "text", "at"}`：誰說、字幕文字、第幾秒開口（`h3_ref` 時只是參考，實際開口時間由聽寫抓）；`"voice_mode"`（選填）這句改用別的模式；`"tts"`（選填）是送給 BreezyVoice 的寫法（可加注音）。沒台詞寫 `null`（H3 會收到靜音音軌，角色不會自己嘟囔） |
 | `frame` | 首幀描述：景別、角色在哪、做什麼、表情、窗戶在畫面哪一邊 |
 | `action` | H3 的動作描述（沒台詞的鏡頭寫明 He does not speak） |
 | `extra_constraints` | 這一鏡額外的限制 |

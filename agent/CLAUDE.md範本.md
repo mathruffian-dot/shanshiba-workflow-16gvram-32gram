@@ -33,7 +33,7 @@
 
 - 首幀：本機 Qwen-Image-Edit 2511 附角色定妝照（`gen_image.py --model qwen-edit --ref`），**每一鏡提示詞都照抄角色完整外觀描述**；做法見 `docs/07_本地角色與首幀.md`。（原頻道用雲端 Image 2.5，有 OpenAI 金鑰才用。）
 - 影片：本機 H3，只給首幀；需要時加尾幀。`"draft": true`（DMAD 4 步）是定稿。
-- 配音：角色參考音定了就不換；台詞一律 `C:\AI\tools\make_breezyvoice.cmd jobs.json`（BreezyVoice，每句 8 候選自動挑），念不準的字標注音 `連假[:ㄐㄧㄚ4]`，`needs_review` 的句子請人聽。
+- 配音：角色參考音定了就不換；**畫面內台詞預設讓 H3 拿角色參考音自己念**（spec `"audio": {"voice_ref": {...}}`，一鏡一位說話者），逐鏡聽寫比對原文、抽 2 個 seed；念錯抽不出來、數字日期難字才改用 `C:\AI\tools\make_breezyvoice.cmd jobs.json`（BreezyVoice，每句 8 候選自動挑，念不準的字標注音 `連假[:ㄐㄧㄚ4]`）當固定音軌，`needs_review` 的句子請人聽。
 - 配樂：MiniMax Music 3 純器樂。
 - 放大：近景 RTX VSR、全景 FlashVSR。
 - 雲端影片服務（Seedance 等）：使用者明說才用。

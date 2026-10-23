@@ -2,6 +2,7 @@
  "_comment": "一支片的全部設定。改這個檔就能做新片；make_film.py 不用改。範例是〈被狗吃掉的作業〉（2026-10-07 一個沒看過本專案的 agent 用本 repo 做出來的 7 鏡短片）。欄位說明見 README.md。",
  "title": "被狗吃掉的作業",
  "repo_dir": "../..",
+ "voice_mode": "h3_ref",
  "cine": "A cinematic film still from a Taiwanese coming-of-age movie, shot on Kodak Vision3 500T film with an anamorphic 50mm lens at f/2. Bright early-morning sun streams in low through the classroom windows, warm side light with a soft glowing rim light on hair, faint visible light beams in slightly hazy air, warm amber and soft teal color grade, shallow depth of field, subtle film grain. Full-frame image, NO black letterbox bars. ",
  "set_sentence": "Use the classroom from <image{n}> as the set (same chalkboard, windows, desks and light), but only as the location.",
  "frame_suffix": " Only one main character in focus. No text, no watermark, no captions, no writing on the chalkboard.",
