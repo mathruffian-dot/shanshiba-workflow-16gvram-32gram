@@ -92,7 +92,7 @@ configs/profile.cmd         這個硬體版本的環境變數
 | # | 步驟 | 工具 | 看哪份文件 | 產出 | 要人工看嗎 |
 |---|---|---|---|---|---|
 | 1 | 劇本＋鏡表（每鏡 ≤12 秒） | `agent/skills/shanshiba-drama` | SKILL.md 開頭的版本說明、`docs/03` | `劇本.md` | ✅ 確認劇本 |
-| 1.5 | 生成前試映：16 宮格分鏡草圖＋讀本（量實際片長） | `make_storyboard.py`（要 OpenAI 金鑰，沒有就跳過草圖）、`make_breezyvoice.cmd`、`assemble_read.py` | `agent/skills/shanshiba-drama/references/table-read.md` | `preview/讀本試映.mp4` | ✅ 聽完說「通過」才做首幀 |
+| 1.5 | 生成前試映：16 宮格分鏡草圖＋**文字讀本**（不做 TTS；用字數估片長與每鏡 H3 鏡長＝字數÷3＋2 秒） | `make_storyboard.py`（要 OpenAI 金鑰，沒有就跳過草圖）、`assemble_read.py` | `agent/skills/shanshiba-drama/references/table-read.md` | `preview/讀本試映.mp4`、`讀本_timeline.json` | ✅ 看完說「通過」才做首幀 |
 | 2 | 角色定妝照（單張、灰底、半身） | `gen_image.py`（Qwen-Image 2.1） | `docs/07` §1 | `chars/<角色>.png` | ✅ 挑一張定案 |
 | 3 | 場景母版（空景，之後裁成各鏡景別） | `gen_image.py` | `docs/07` §4 | `masters/*.png` | |
 | 4 | 首幀（附定妝照＋母版裁切，**每鏡照抄角色完整外觀描述**） | `gen_image.py --model qwen-edit --ref` | `docs/07` §2–3 | `first/<鏡>.png` | ✅ 逐張看：臉、服裝、多手多腳、背景有沒有字 |
