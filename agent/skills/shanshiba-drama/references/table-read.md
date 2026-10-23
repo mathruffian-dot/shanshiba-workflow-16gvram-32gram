@@ -57,7 +57,7 @@ python tools/assemble_read.py <片資料夾>/preview/shots.json
 ## 4. 之後的聲音流程（H3 階段）
 
 - 每個角色一份參考音（你有權使用的真人錄音，10–20 秒、乾淨、平常講話語氣），定了就不換。角色要吼、喊口令的戲，**另錄一份兇的參考音**（平常語氣的參考音念兇的口令會偏溫和）。
-- H3 spec 寫 `audio.voice_ref`，一鏡一位說話者（兩人對話拆單人鏡）；鏡長用 `h3_sec`。
+- H3 spec 寫 `audio.voice_ref`；兩三人對話同鏡就寫 `audio.voice_refs`（各給參考音，最多 3 位）；鏡長用 `h3_sec`。
 - 跑完聽寫比對原文 → 念錯／改用詞的換 seed 再抽 2 次 → 還是錯：**請配音的人錄那一句**，當固定音軌（`audio.fixed`）給 H3 對嘴、只重跑那一鏡；沒人能錄才用 BreezyVoice 固定音軌（`tools/make_breezyvoice.cmd`，這時才需要第 5 節的讀音修法）。
 - 寫劇本時就避開 H3 容易改掉的說法（例：「二十四號」會被念成「二十四日」）。
 

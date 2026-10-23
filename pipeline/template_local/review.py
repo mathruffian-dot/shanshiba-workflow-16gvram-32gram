@@ -23,7 +23,8 @@ cut = Path(sys.argv[1]).resolve(); stem = cut.stem
 OUT = cut.parent.parent; RV = OUT / "review"; RV.mkdir(exist_ok=True)
 E = json.loads((OUT / "post" / "edl.json").read_text(encoding="utf-8")); SH = E["shots"]
 TOOLS = __import__("os").environ.get("AI_TOOLS", r"C:\AI\tools")
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
+sys.path.insert(0, TOOLS)                                                 # fonts.py：AI_TOOLS（工具複製到 C:\AI\tools 時）
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))     # 或 repo 裡的 tools/（範本在 repo 原位時優先）
 from fonts import font as _font  # noqa: E402  (Windows 字型；Linux 用 Noto CJK)
 font = ImageFont.truetype(_font("jh"), 20)
 out = {}

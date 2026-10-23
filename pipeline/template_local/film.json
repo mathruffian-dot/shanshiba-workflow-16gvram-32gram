@@ -46,14 +46,14 @@
    "id": "S1", "refs": ["chen"], "scene": ["front", [0.20, 0.0, 1.0, 0.70]], "dur": 4.5,
    "line": {"who": "chen", "text": "好，作業交上來。", "at": 0.6},
    "frame": "Medium shot at eye level from the students' point of view, waist-up framing: the woman from <image1> stands at the front of the classroom from <image2>, in front of the green chalkboard, directly behind the wooden teacher's desk, both of her hands resting empty on the desk top. Exactly one notebook in the whole image: a plain light-blue notebook with a completely blank cover lies flat on the teacher's desk next to her right hand. Her hands hold nothing. She looks out toward the students with a calm, businesslike face. The windows are on the left side of the frame.",
-   "action": "The teacher looks out over the class and calmly gives a short instruction, then waits.",
+   "action": "Starting from <Picture 1>, Ms. Chen stands behind the teacher's desk with both empty hands resting on the desktop. She lifts her chin slightly and sweeps her gaze across the class from left to right, then says her short instruction in a calm, businesslike tone. After the line she straightens up, taps the desktop twice with the fingertips of her right hand, and waits with her eyebrows raised, her eyes moving from desk to desk. The blank light-blue notebook stays flat on the desk next to her right hand.",
    "cut_in": 0.0, "tail": 1.2
   },
   {
    "id": "S2", "refs": ["zhe"], "scene": ["seats", [0.20, 0.25, 0.80, 0.95]], "dur": 4.3,
    "line": null,
    "frame": "Medium shot from the front of the classroom from <image2>, facing the students: the boy from <image1> sits at the front-row wooden desk, bent over an open navy-blue school backpack on his lap, both hands digging inside it, with a panicked, wide-eyed face. Behind him, out of focus, a few seated classmates in the same white school shirts sit quietly at their wooden desks, all facing the front of the classroom. The windows are on the right side of the frame.",
-   "action": "The boy keeps both hands inside the open backpack on the desk and rummages through it, peeking inside, more and more anxious; nothing is pulled out or thrown and every object stays on the desk; his face turns pale with panic. He does not speak; his lips stay closed.",
+   "action": "Starting from <Picture 1>, Azhe sits bent over the open navy-blue backpack on his lap with both hands inside it. He digs faster and faster, his forearms pumping in and out of the opening, then pulls the backpack wider open with both hands and leans closer to peer inside, his face still toward the camera. He shakes the backpack once and digs again with both hands; his eyes go wide, his mouth hangs open and the color drains from his face. Every object stays inside the backpack; nothing is pulled out or thrown. He does not speak; his lips stay closed.",
    "extra_constraints": ["The classmates in the background stay seated facing the front and barely move; they never speak."],
    "amb": true, "amb_seed": 20261007,
    "cut_in": 0.0, "cut_out": "full"
@@ -62,7 +62,7 @@
    "id": "S3", "refs": ["zhe"], "scene": ["seats", [0.25, 0.20, 0.75, 0.90]], "dur": 4.6,
    "line": {"who": "zhe", "text": "老師，我的作業被狗吃掉了。", "at": 0.6},
    "frame": "Medium close-up from the front of the classroom from <image2>, facing the students: the boy from <image1> sits at his front-row wooden desk, raising one hand high, with a forced, overly innocent smile and nervous eyes looking toward the front of the room. Behind him, out of focus, a few seated classmates in the same white school shirts sit quietly at their wooden desks, all facing the front of the classroom. The windows are on the right side of the frame.",
-   "action": "The boy keeps his hand raised and, with a forced innocent smile, makes his excuse toward the front of the room.",
+   "action": "Starting from <Picture 1>, Azhe keeps his right hand raised high above his head. He widens his eyes, stretches his forced, overly innocent smile even wider, tilts his head a little to one side and makes his excuse toward the front of the room. While speaking he waves the raised hand slightly from side to side for emphasis and nods once at the end. After the line he freezes with the smile fixed on his face and his hand still up, his eyes darting sideways for a moment.",
    "extra_constraints": ["The classmates in the background stay seated facing the front and barely move; they never speak."],
    "cut_in": 0.30, "tail": 0.9
   },
@@ -70,28 +70,28 @@
    "id": "S4", "refs": ["chen"], "scene": ["front", [0.35, 0.0, 0.95, 0.68]], "dur": 3.6,
    "line": {"who": "chen", "text": "你家沒有養狗。", "at": 0.7},
    "frame": "Close-up at eye level: the woman from <image1> in front of the green chalkboard of the classroom from <image2>, pushing up her gold-rimmed glasses with one finger, looking straight ahead with a completely flat, unimpressed expression. The windows are on the left side of the frame.",
-   "action": "The teacher lowers her hand from her glasses and answers flatly, without any expression.",
+   "action": "Starting from <Picture 1>, Ms. Chen holds one finger on the bridge of her gold-rimmed glasses, pushes them up a little, then lowers her hand slowly to her chest. Her face stays completely flat: her eyebrows do not move and her mouth stays a straight line. She looks straight ahead and answers in a flat, level voice, without any expression. After the line she gives one slow blink and keeps staring straight ahead, perfectly still.",
    "cut_in": 0.35, "tail": 1.3
   },
   {
    "id": "S5", "refs": ["zhe"], "scene": ["seats", [0.30, 0.20, 0.70, 0.80]], "dur": 4.0,
    "line": {"who": "zhe", "text": "是……鄰居的狗。", "at": 0.6},
    "frame": "Close-up from the front of the classroom from <image2>: the boy from <image1> at his desk, frozen for a moment, his eyes sliding to the side, a sheepish guilty face. Behind him, out of focus, a classmate sits at a desk. The windows are on the right side of the frame.",
-   "action": "The boy freezes, his eyes drift sideways, then he mumbles a weak correction with a guilty face.",
+   "action": "Starting from <Picture 1>, Azhe sits frozen at his desk for a moment, his shoulders stiff. His eyes slide to the side, away from the teacher, and his lips press together. He swallows, scratches the back of his head once with his right hand, then mumbles his weak correction in a small, unsure voice while still avoiding her eyes. After the line he sinks his neck a little into his shoulders and gives a sheepish, guilty half-smile.",
    "cut_in": 0.25, "tail": 1.0
   },
   {
    "id": "S6", "refs": ["chen"], "scene": ["front", [0.20, 0.0, 1.0, 0.70]], "dur": 5.0,
    "line": {"who": "chen", "text": "那昨天放在我桌上的，是誰的作業？", "at": 0.6},
    "frame": "Medium shot at eye level from the students' point of view: the woman from <image1> stands behind the wooden teacher's desk in front of the green chalkboard of the classroom from <image2>, holding up a plain light-blue notebook with a completely blank cover in front of her chest with one hand, the corner of her mouth curling into a small knowing smile. The windows are on the left side of the frame.",
-   "action": "The teacher keeps the light-blue notebook raised at her chest and asks her question with a small knowing smile.",
+   "action": "Starting from <Picture 1>, Ms. Chen holds the plain light-blue notebook up in front of her chest with one hand. She raises it a few centimeters higher toward the class and taps its blank cover twice with the index finger of her other hand. The corner of her mouth curls further into a small knowing smile, one eyebrow lifts, and she asks her question slowly and clearly. After the line she tilts her head slightly to one side and waits, the notebook still raised.",
    "cut_in": 0.30, "tail": 0.9
   },
   {
    "id": "S7", "refs": ["zhe"], "scene": ["seats", [0.30, 0.20, 0.70, 0.80]], "dur": 4.0,
    "line": {"who": "zhe", "text": "……是我的。", "at": 0.9},
    "frame": "Close-up from the front of the classroom from <image2>: the boy from <image1> at his desk, staring at something in front of him, his face flushed red with embarrassment, shoulders starting to shrink down into his chair. Behind him, out of focus, a classmate sits at a desk. The windows are on the right side of the frame.",
-   "action": "The boy blushes deeply, admits it in a tiny voice, then slowly sinks down into his chair with an embarrassed smile.",
+   "action": "Starting from <Picture 1>, Azhe stares at something in front of him, his face flushed red. He lowers his eyes to his desk, takes a small breath and admits it in a tiny voice. Then, little by little, he slides down in his chair: his shoulders shrink, his back slips down against the backrest and his chin sinks toward his chest until his face is just above the desk edge, an embarrassed smile spreading across his red face.",
    "cut_in": 0.45, "cut_out": "full"
   }
  ],

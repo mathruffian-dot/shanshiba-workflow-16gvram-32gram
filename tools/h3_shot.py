@@ -34,6 +34,8 @@ Shot spec (JSON; relative paths resolve against the JSON file's folder):
      "identity_image": null}         # optional extra identity picture (NOT recommended in multi-person shots: extra people appear)
   ],
   "audio": {"voice_ref": {"subject": "ahe", "file": "ahe_ref.wav"}},   # timbre only, H3 speaks the line itself
+       # or {"voice_refs": [{"subject": "ahe", "file": ...}, {"subject": "teacher", "file": ...}]}  two or three speakers in one
+       #    shot (2026-10-23; <Audio 1..3> in this order, each line names the <Audio k> timbre it uses)
        # or {"fixed": {"file": "guide.wav"}}  exact soundtrack reused 1:1 (48 kHz mono; [] silence -> write a silent wav)
   "shots": [
     {"camera": "The camera holds a static shot on a tripod.",           # official camera wording (type + amplitude + speed)
@@ -86,6 +88,15 @@ def ts(sec):
     return f"{int(sec // 60):02d}:{sec % 60:06.3f}"
 
 
+def voice_refs(spec):
+    """audio.voice_ref (one speaker) or audio.voice_refs (list, max 3 - the Ref2VA node takes ref_audio_0..2), in <Audio k> order."""
+    a = spec.get("audio") or {}
+    v = a.get("voice_refs") or ([a["voice_ref"]] if a.get("voice_ref") else [])
+    if len(v) > 3:
+        raise ValueError("H3 takes at most 3 reference audios (voice_refs)")
+    return v
+
+
 def build_prompt(spec):
     allsubs = spec["subjects"]
     subs = [s for s in allsubs if not s.get("voice_only")]  # voice_only: off-screen voice with no visible body (e.g. Heaven)
@@ -100,7 +111,10 @@ def build_prompt(spec):
             pic += 1
             id_pic[s["key"]] = pic
     audio = spec.get("audio") or {}
-    voice_ref, fixed = audio.get("voice_ref"), audio.get("fixed")
+    fixed = audio.get("fixed")
+    vrefs = voice_refs(spec)
+    aud = {v["subject"]: k for k, v in enumerate(vrefs, start=1)}  # speaker key -> <Audio k>
+    voice_ref = vrefs[0] if len(vrefs) == 1 else None  # single-speaker wording kept exactly as before 2026-10-23
     shots = spec["shots"]
     # speaker IDs in order of first vocal event
     sid = {}
@@ -137,8 +151,8 @@ def build_prompt(spec):
     elif cam:
         L.append("<Video 1> is ONLY a " + cam.get("role", "Blender camera and spatial-layout guide")
                  + ": its low-poly proxy figures and flat colors are not characters or visual style; only its camera path and spatial relationships are followed.")
-    if voice_ref:
-        L.append(f"<Audio 1> is the voice-timbre reference for {lab(voice_ref['subject'])}.")
+    for k, v in enumerate(vrefs, start=1):  # 2026-10-23: up to 3 speakers, one <Audio k> each (node input ref_audio_{k-1})
+        L.append(f"<Audio {k}> is the voice-timbre reference for {lab(v['subject'])}.")
     if fixed:
         L.append("<Audio 1> is the complete, exactly timed soundtrack of the target video"
                  + (", containing the spoken lines" if sid else ", containing only quiet room tone") + ".")
@@ -148,7 +162,7 @@ def build_prompt(spec):
         tasks.append("keyframe completion")
     if cam or (not first and any(s.get("identity_image") for s in subs)):
         tasks.append("reference generation")
-    if voice_ref:
+    if vrefs:
         tasks.append("audio reference")
     if fixed:
         tasks.append("audio reuse")
@@ -160,7 +174,7 @@ def build_prompt(spec):
     for key in sid:
         n_lines = sum(1 for sh in shots for d in sh.get("dialogue", []) if d["subject"] == key)
         summ += (f" {_cap(lab(key))} speaks {n_lines} short line{'s' if n_lines > 1 else ''}"
-                 + (" with the voice timbre referenced from <Audio 1>" if voice_ref and voice_ref["subject"] == key else "")
+                 + (f" with the voice timbre referenced from <Audio {aud[key]}>" if key in aud else "")
                  + (" exactly as in <Audio 1>" if fixed else "") + ".")
     L += ["", "summary:", summ, "", "retention_analysis:"]
     for s in subs:
@@ -173,8 +187,8 @@ def build_prompt(spec):
                  " the mannequins' appearance, proportions and background are discarded.")
     elif cam:
         L.append("<Video 1> (camera path and spatial layout): partially_preserved - the camera trajectory and room geometry are followed; the proxy figures' appearance and stiffness are discarded.")
-    if voice_ref:
-        L.append("<Audio 1>: reference - only the voice timbre and accent are followed; the words of <Audio 1> are not reused.")
+    for k in range(1, len(vrefs) + 1):
+        L.append(f"<Audio {k}>: reference - only the voice timbre and accent are followed; the words of <Audio {k}> are not reused.")
     if fixed:
         L.append("<Audio 1>: fully_copy - <Audio 1> is reused 1:1 as the target video's complete audio track, and lips follow it exactly.")
 
@@ -209,7 +223,8 @@ def build_prompt(spec):
                 parts.append(f"{_cap(lab(d['subject']))} says in an off-screen voiceover{voice}: <d>[{d.get('lang', 'Chinese')}] {line}</d> "
                              + (d.get("closed_lips") or "while every visible character's lips remain completely closed."))
             else:
-                parts.append(f"{_cap(lab(d['subject']))} says{voice}, <d>[{d.get('lang', 'Chinese')}] {line}</d>")
+                tim = f", using the voice timbre referenced from <Audio {aud[d['subject']]}>," if len(vrefs) > 1 and d["subject"] in aud else ""
+                parts.append(f"{_cap(lab(d['subject']))} says{voice}{tim}" + ("" if tim else ",") + f" <d>[{d.get('lang', 'Chinese')}] {line}</d>")
                 if d.get("after"):
                     parts.append(d["after"])
         if i == n_shots and last:
@@ -441,9 +456,11 @@ def build_graph(spec, prompt, base, tag):
         g["62"] = {"class_type": "SetLatentNoiseMask", "inputs": {"samples": ["60", 0], "mask": ["61", 0]}}
         g["63"] = {"class_type": "LTXVConcatAVLatent", "inputs": {"video_latent": ["6", 1], "audio_latent": ["62", 0]}}
         latent = ["63", 0]
-    elif audio.get("voice_ref"):  # timbre only, H3 speaks
-        g["32"] = {"class_type": "LoadAudio", "inputs": {"audio": stage(base / audio["voice_ref"]["file"], f"{tag}_voice.wav")}}
-        g["6"]["inputs"]["ref_audios.ref_audio_0"] = ["32", 0]
+    else:  # timbre only, H3 speaks; 2026-10-23: up to 3 speakers -> ref_audio_0..2 = <Audio 1..3>
+        for k, v in enumerate(voice_refs(spec)):
+            n = str(32 + k)
+            g[n] = {"class_type": "LoadAudio", "inputs": {"audio": stage(base / v["file"], f"{tag}_voice{k}.wav" if k else f"{tag}_voice.wav")}}
+            g["6"]["inputs"][f"ref_audios.ref_audio_{k}"] = [n, 0]
     if spec.get("first_clip"):  # 2026-10-10: multi-frame continuation - previous clip's last 5/22/39 frames anchored at frame 0 (AddGuide accepts 17k+5 frame clips)
         g["44"] = {"class_type": "LoadVideo", "inputs": {"file": stage(base / spec["first_clip"], f"{tag}_firstclip.mp4")}}
         g["45"] = {"class_type": "GetVideoComponents", "inputs": {"video": ["44", 0]}}

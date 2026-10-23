@@ -8,7 +8,7 @@ stage（不給＝全部依序）：chars masters frames voices h3 amb edl music 
   - 改了台詞：voice_mode h3_ref（預設）刪 out/h3/<鏡>/clip.mp4 再跑 h3；fixed 刪 out/voice/bv 裡那句的檔（或整個 out/voice/bv），再跑 voices
 台詞聲音（2026-10-23 起預設 voice_mode "h3_ref"）：Breeze 設計角色參考音 → H3 拿參考音自己念台詞（嘴型與聲音一起生成）→ h3 階段結尾
 分離人聲＋聽寫比對原文。"fixed"＝舊做法（BreezyVoice 配音當固定音軌）。film.json 全片設 voice_mode，單句可在 line 裡設 "voice_mode" 覆寫。
-⚠ h3_ref 在本 repo 的成片範本尚未從頭實測（主專案已在 RTX 5090 實測 H3＋參考音）。
+2026-10-24 本範本從頭實測（RTX 5090，〈被狗吃掉的作業〉7 鏡、action 照官方結構寫）：6 句台詞 H3 全部念對、自審五遍通過、影音同為 39.000 秒、全程約 27 分鐘。
   - 改了剪接（cut_in、tail…）：跑 edl cut review 即可
 人工關卡：frames 之後看 out/first/_sheet.jpg；h3 之後看 out/review/clips_*.jpg；review 之後一定要看成片。
 2026-10-07 由「一個沒看過本專案的 agent 照 repo 做出〈被狗吃掉的作業〉」時寫的 film.py／post.py 整理而成。"""
@@ -130,8 +130,9 @@ def free_comfy():
 
 def run(cmd, cwd=OUT, check=True, **kw):
     print("$", " ".join(map(str, cmd))[:200], flush=True)
+    env = {**os.environ, **kw.pop("env", {}), "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
     r = subprocess.run([str(c) for c in cmd], cwd=str(cwd), capture_output=True, text=True, encoding="utf-8", errors="replace",
-                       env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}, stdin=subprocess.DEVNULL, **kw)
+                       env=env, stdin=subprocess.DEVNULL, **kw)
     if check and r.returncode != 0:
         raise SystemExit(f"FAILED: {' '.join(map(str, cmd))[:200]}\n{(r.stdout + r.stderr)[-2500:]}")
     return r
@@ -625,8 +626,11 @@ def cut():
 def review():
     """自審五遍（review.py）：1 逐鏡抽格、2 成片聽寫、3 雜訊、4 黑畫面／定格／響度、5 切點明暗／台詞重疊／台詞被鏡尾切掉。"""
     c = OUT / "cut" / "film_1080p.mp4"
-    r1 = run([PYH3, HERE / "review.py", c], check=False); print(r1.stdout[-3000:], flush=True)
-    r2 = run([PYV, HERE / "review.py", c, "--asr"], check=False); print(r2.stdout[-2000:], flush=True)
+    env = {"AI_TOOLS": str(REPO / "tools")}                      # review.py 的 fonts.py 跟 film.json 的 repo_dir 走（範本搬到別的資料夾也能跑）
+    for r in (run([PYH3, HERE / "review.py", c], check=False, env=env), run([PYV, HERE / "review.py", c, "--asr"], check=False, env=env)):
+        print(r.stdout[-3000:], flush=True)
+        if r.returncode != 0:                                    # 自審失敗不能悄悄略過
+            print(f"⚠ review.py 失敗（{r.returncode}）：\n{r.stderr[-2000:]}", flush=True)
     print("→ 看 out/review/：film_1080p_pass1.jpg、pass5_cuts.jpg、review.json、asr.json；最後一定要人看成片", flush=True)
 
 
