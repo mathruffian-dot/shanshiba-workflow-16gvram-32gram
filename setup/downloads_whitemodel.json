@@ -1,0 +1,30 @@
+[
+ {
+  "url": "https://huggingface.co/Comfy-Org/SDPose/resolve/acb43fbe8142b54d9ebd52b720b81dd4e14c8d81/diffusion_models/rt_detr_v4-x-hgnet_fp16.safetensors",
+  "sha256": "581f9af9bbabb664d1891cbccd823308b176ecd409146f954dfa39af3bec2476",
+  "size": 123968978,
+  "destination": "C:/AI/H3/ComfyUI-0.36.0/models/diffusion_models/rt_detr_v4-x-hgnet_fp16.safetensors",
+  "name": "rt_detr_v4-x-hgnet_fp16.safetensors"
+ },
+ {
+  "url": "https://huggingface.co/Comfy-Org/sam-3d-body/resolve/7c974aea58e062252a6cb5b6f9b7f639d545b729/detection/sam_3d_body_dinov3_bf16.safetensors",
+  "sha256": "59fa45200c504c5b56625004d7d3385daf48c616613e88099e43bf83b3e249cf",
+  "size": 2830737652,
+  "destination": "C:/AI/H3/ComfyUI-0.36.0/models/detection/sam_3d_body_dinov3_bf16.safetensors",
+  "name": "sam_3d_body_dinov3_bf16.safetensors"
+ },
+ {
+  "url": "https://huggingface.co/Comfy-Org/MoGe/resolve/1484985258ba7ef45c314144fcf0e90924ffbf44/geometry_estimation/moge_3_vitg_fp16.safetensors",
+  "sha256": "a587e42936ae7080b419df4c047b0f0b075d3492418f76ce81fb0779925a1fe6",
+  "size": 2501605198,
+  "destination": "C:/AI/H3/ComfyUI-0.36.0/models/geometry_estimation/moge_3_vitg_fp16.safetensors",
+  "name": "moge_3_vitg_fp16.safetensors"
+ },
+ {
+  "url": "https://huggingface.co/Comfy-Org/sam3.1/resolve/7bb8374780a725b4353ed31f3a9395c9742b5621/checkpoints/sam3.1_multiplex_fp16.safetensors",
+  "sha256": "9ba99c92703c2e8b4f47de2d34a539bb8e18923049e238b780d70dbe6368eb03",
+  "size": 1745546848,
+  "destination": "C:/AI/H3/ComfyUI-0.36.0/models/checkpoints/sam3.1_multiplex_fp16.safetensors",
+  "name": "sam3.1_multiplex_fp16.safetensors"
+ }
+]

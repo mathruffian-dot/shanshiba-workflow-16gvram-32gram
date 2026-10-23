@@ -8,8 +8,12 @@ Prereqs:
 Presets (--model):
   qwen21         Qwen-Image 2.1 (official int8)                steps 50, cfg 1, default 2688x1536 (2K)
   qwen21-unc     Qwen-Image 2.1 (uncensored GGUF + heretic TE) steps 50, cfg 1, default 2688x1536 (2K)
+  qwen21-turbo   Qwen-Image 2.1 Turbo (int8, = --turbo)        fixed 8 steps, cfg 1, official sigmas (ManualSigmas)
+                 DRAFT / composition sampling / fallback only (~12 s per 2K image vs ~63 s). Skin smoother, specific
+                 expressions drift toward a smile, shadows crushed -> finals stay on qwen21 50 steps. Character LoRAs
+                 (--lora) work. Tested 2026-10-12 (author RTX 5090: ~12 s vs ~63 s per 2K image).
 
-Qwen-Image 2.1 quality defaults (A/B 2026-09-28, 試行/Qwen21畫質比較_20260928): 50 steps + native 2K + a LONG
+Qwen-Image 2.1 quality defaults (A/B 2026-09-28): 50 steps + native 2K + a LONG
 photographer-style prompt (camera/lens, light, subject, simple background, "uncluttered") is what closes most of the gap
 to Image 2.5; listing every room object makes a cluttered image. cfg stays 1 (official), so --negative is ignored.
   krea2          Krea 2 Turbo (official fp8)                   steps 8,  cfg 1
@@ -26,11 +30,11 @@ Examples:
 Outputs go to ComfyUI/output/<prefix>_00001_.png (the script prints the path).
 """
 import argparse
+import os
 import json
 import shutil
 import time
 import urllib.request
-import os
 from pathlib import Path
 
 DEFAULT_HOST = os.environ.get("COMFY_HOST", "http://127.0.0.1:8188")
@@ -45,6 +49,13 @@ PRESETS = {
         unet="qwen-image-2.1-uncensored-Q8_0.gguf", clip="qwen3vl_8b_w4a8_heretic.safetensors",
         clip_type="qwen_image", vae="qwen_image_2.1_vae_bf16.safetensors",
         encoder="qwen21", steps=50, cfg=1.0, sampler="euler", scheduler="simple", size=(2688, 1536)),
+    # 2026-10-12: Turbo = distilled 8-step model. euler/simple fogs the image and speckles faces on img2img ->
+    # always the official sigma list (Qwen/Qwen-Image-2.1-Turbo model_index.json sample_sigmas + final 0).
+    "qwen21-turbo": dict(
+        unet="qwen_image_2.1_turbo_int8_convrot.safetensors", clip="qwen3vl_8b_int8_convrot.safetensors",
+        clip_type="qwen_image", vae="qwen_image_2.1_vae_bf16.safetensors",
+        encoder="qwen21", steps=8, cfg=1.0, sampler="euler", scheduler="official_sigmas", size=(2688, 1536),
+        sigmas=None),  # filled below with TURBO_SIGMAS
     "krea2": dict(
         unet="krea2_turbo_fp8_scaled.safetensors", clip="qwen3vl_4b_fp8_scaled.safetensors",
         clip_type="krea2", vae="qwen_image_vae.safetensors",
@@ -62,6 +73,15 @@ PRESETS = {
         clip_type="qwen_image", vae="qwen_image_vae.safetensors",
         encoder="editplus", steps=16, cfg=1.0, sampler="euler", scheduler="simple", auraflow=3.1),
 }
+
+# Official Qwen-Image 2.1 Turbo schedule (8 steps): stays >0.85 for 6 steps, then lands. Last 0 = fully denoised.
+TURBO_SIGMAS = [1.0, 0.978453, 0.95418, 0.926626, 0.89508, 0.845148, 0.704534, 0.414568, 0.0]
+TURBO_UNET = PRESETS["qwen21-turbo"]["unet"]
+PRESETS["qwen21-turbo"]["sigmas"] = TURBO_SIGMAS
+
+
+def sigmas_node(sigmas):
+    return {"class_type": "ManualSigmas", "inputs": {"sigmas": ", ".join(str(round(s, 6)) for s in sigmas)}}
 
 
 def _req(host, path, data=None, timeout=60):
@@ -103,9 +123,16 @@ def build(a, preset, prompt):
     g["3"] = {"class_type": "VAELoader", "inputs": {"vae_name": preset["vae"]}}
     g["5"] = {"class_type": "EmptyLatentImage",
               "inputs": {"width": a.width, "height": a.height, "batch_size": 1}}
-    g["6"] = {"class_type": "KSampler",
-              "inputs": {"model": ["1", 0], "latent_image": ["5", 0], "seed": a.seed, "steps": a.steps,
-                         "cfg": a.cfg, "sampler_name": a.sampler, "scheduler": a.scheduler, "denoise": 1.0}}
+    if preset.get("sigmas"):  # Turbo: SamplerCustom + official ManualSigmas (positive/negative wired below)
+        g["60"] = sigmas_node(preset["sigmas"])
+        g["61"] = {"class_type": "KSamplerSelect", "inputs": {"sampler_name": "euler"}}
+        g["6"] = {"class_type": "SamplerCustom",
+                  "inputs": {"model": ["1", 0], "latent_image": ["5", 0], "add_noise": True, "noise_seed": a.seed,
+                             "cfg": a.cfg, "sampler": ["61", 0], "sigmas": ["60", 0]}}
+    else:
+        g["6"] = {"class_type": "KSampler",
+                  "inputs": {"model": ["1", 0], "latent_image": ["5", 0], "seed": a.seed, "steps": a.steps,
+                             "cfg": a.cfg, "sampler_name": a.sampler, "scheduler": a.scheduler, "denoise": 1.0}}
     g["7"] = {"class_type": "VAEDecode", "inputs": {"samples": ["6", 0], "vae": ["3", 0]}}
     g["8"] = {"class_type": "SaveImage", "inputs": {"images": ["7", 0], "filename_prefix": a.prefix}}
 
@@ -172,6 +199,9 @@ def main():
                     help="reference image (repeatable); use <image1>/<image2> in the prompt")
     ap.add_argument("--model", default="qwen21", choices=sorted(PRESETS), help="model preset")
     ap.add_argument("--uncensored", action="store_true", help="shorthand for --model qwen21-unc")
+    ap.add_argument("--turbo", action="store_true",
+                    help="Qwen-Image 2.1 Turbo (= --model qwen21-turbo): fixed 8 steps, cfg 1, official sigmas. "
+                         "Drafts / composition sampling / fallback only; finals stay on qwen21 50 steps")
     ap.add_argument("--width", type=int, default=None, help="default: preset size (qwen21 2688x1536) else 1024")
     ap.add_argument("--height", type=int, default=None)
     ap.add_argument("--resolution", type=int, default=1024, help="reference-image resize budget (qwen21 only)")
@@ -190,7 +220,20 @@ def main():
     a = ap.parse_args()
 
     name = "qwen21-unc" if a.uncensored else a.model
+    if a.turbo:
+        if a.uncensored or name not in ("qwen21", "qwen21-turbo"):
+            raise SystemExit("--turbo only works with the qwen21 preset (there is no Turbo for "
+                             f"{'qwen21-unc' if a.uncensored else name})")
+        name = "qwen21-turbo"
     p = dict(PRESETS[name])
+    if p.get("sigmas"):  # Turbo is distilled for exactly this schedule
+        if a.steps is not None and a.steps != p["steps"]:
+            print(f"[warn] Turbo is fixed at {p['steps']} steps (official sigmas); ignoring --steps {a.steps}", flush=True)
+        if a.cfg is not None and a.cfg != p["cfg"]:
+            print(f"[warn] Turbo is distilled for cfg {p['cfg']}; ignoring --cfg {a.cfg}", flush=True)
+        if a.sampler or a.scheduler:
+            print("[warn] Turbo always uses euler + official sigmas; ignoring --sampler/--scheduler", flush=True)
+        a.steps, a.cfg, a.sampler, a.scheduler = None, None, None, None
     if a.unet: p["unet"] = a.unet
     if a.clip: p["clip"] = a.clip
     if a.vae: p["vae"] = a.vae
@@ -213,7 +256,7 @@ def main():
     res = _req(a.host, "/prompt", {"prompt": graph})
     pid = res["prompt_id"]
     print(f"[queued] prompt_id={pid} model={name} {a.width}x{a.height} steps={a.steps} cfg={a.cfg} "
-          f"seed={a.seed} refs={len(a.ref or [])}", flush=True)
+          f"seed={a.seed} refs={len(a.ref or [])} sampler={a.sampler}/{a.scheduler} loras={a.lora or []}", flush=True)
 
     t0 = time.time()
     while True:

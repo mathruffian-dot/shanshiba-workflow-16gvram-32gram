@@ -1,0 +1,9 @@
+[
+ {
+  "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/diffusion_models/qwen_image_2.1_turbo_int8_convrot.safetensors",
+  "sha256": "8144a0182964aa8403ad6dbc011db837304167d235161b9aabaa8532e967314c",
+  "size": 7256787829,
+  "destination": "C:/AI/H3/ComfyUI-0.36.0/models/diffusion_models/qwen_image_2.1_turbo_int8_convrot.safetensors",
+  "name": "diffusion_models/qwen_image_2.1_turbo_int8_convrot.safetensors"
+ }
+]

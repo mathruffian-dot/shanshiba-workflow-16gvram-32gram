@@ -456,7 +456,8 @@ def edl():
     amb_files = json.loads((OUT / "post" / "amb.json").read_text(encoding="utf-8")) if (OUT / "post" / "amb.json").exists() else {}
     t, rows = 0.0, []
     for s in SHOTS:
-        cd = dur(OUT / "h3" / s["id"] / "clip.mp4"); a = float(s.get("cut_in", 0.0)); b = s.get("cut_out"); lines = []
+        # 修剪點一律對齊 1/24 秒：cut 階段每段用 -frames:v 取整數格，沒對齊的話每鏡多／少零點幾格、累積起來畫面會落後聲音
+        cd = dur(OUT / "h3" / s["id"] / "clip.mp4"); a = round(float(s.get("cut_in", 0.0)) * FPS) / FPS; b = s.get("cut_out"); lines = []
         if s.get("line"):
             i = line_index(s["id"]); ln = s["line"]; p = picks[str(i)]; d = dur(p["file"])
             at = float(p.get("at", ln["at"])); lead = 0.0 if p.get("source") == "h3" else MIX.get("say_lead", 0.2)
@@ -465,6 +466,7 @@ def edl():
             if b is None:
                 b = at + d + s.get("tail", MIX.get("default_tail", 0.55))
         b = cd if b in (None, "full") else min(float(b), cd)
+        b = min(round(b * FPS), int(cd * FPS + 1e-6)) / FPS
         rows.append(dict(id=s["id"], start=round(t, 3), dur=round(b - a, 3), src_in=a, src_out=round(b, 3), lines=lines, amb=amb_files.get(s["id"])))
         t += b - a
     e = dict(shots=rows, story_end=round(t, 3), total=round(t + ending_secs(), 3))

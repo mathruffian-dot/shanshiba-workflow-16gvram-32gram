@@ -126,7 +126,7 @@ foreach ($f in 'downloads.json','downloads_uncensored.json','downloads_dmad.json
 | `downloads_breeze_tts2.json` | Breeze TTS 2（含 tokenizer、audio_tokenizer；只用來設計新角色的參考音） | 7.1GB |
 | `downloads_breezyvoice.json` | BreezyVoice-300M（**台詞配音**） | 3.0GB |
 | `downloads_flashvsr.json` | FlashVSR v1.1 | 6.3GB |
-| 選用 | `downloads_action_loras.json`（動作 LoRA）、`downloads_funcontrol.json`（舞蹈骨架控制） | — |
+| 選用 | `downloads_action_loras.json`（動作 LoRA）、`downloads_funcontrol.json`（舞蹈骨架控制）、`downloads_whitemodel.json`（舞蹈／武打白模動作參考，7.2GB；多人上色節點在 `setup/comfy_nodes/whitemodel_color`）、`downloads_qwen_turbo.json`（首幀草稿模式，7.3GB） | — |
 
 另外四個會自動下載的：
 - VoxCPM2 小檔：`C:\AI\Voice\venv\Scripts\python.exe -c "from huggingface_hub import snapshot_download as s; s('openbmb/VoxCPM2', revision='32279effe8c19989596f05d353d1447f51d9e915', local_dir=r'C:\AI\Voice\models\VoxCPM2')"`

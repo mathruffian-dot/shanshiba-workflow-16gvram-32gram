@@ -20,7 +20,10 @@ Shot spec (JSON; relative paths resolve against the JSON file's folder):
   "style": "a realistic live-action Taiwanese film shot on 35mm, natural window light, subtle believable acting",
   "setting": "a Taiwanese elementary school classroom",
   "first_frame": "kf.png",          # <Picture 1>; pinned at frame 0 (strongly recommended - project default)
+  # "first_clip": "prev_tail22.mp4",  # optional: last 5/22/39 frames of the previous clip pinned at frames 0.. instead of the single first frame (continuation); keep first_frame = its last frame for <Picture 1>
   "camera_video": {"file": "blender_S01.mp4"},   # optional <Video 1>: Blender previs camera/layout guide (blender-previs skill)
+  # or {"file": "wm.mp4", "kind": "motion", "people": 1, "follow": "..."}: gray-mannequin motion reference from make_whitemodel.py
+  #    (dance / fight shots, 2026-10-14; describe props such as swords in "action" - the mannequins carry none)
   "last_frame": "end.png",          # optional; pinned at the last frame (only for long continuous actions / fixed end states)
   "subjects": [                     # everyone visible or speaking; order = <Subject N>
                                     # {"key": "sky", "desc": "a deep, echoing off-screen male voice", "voice_only": true}
@@ -34,7 +37,11 @@ Shot spec (JSON; relative paths resolve against the JSON file's folder):
        # or {"fixed": {"file": "guide.wav"}}  exact soundtrack reused 1:1 (48 kHz mono; [] silence -> write a silent wav)
   "shots": [
     {"camera": "The camera holds a static shot on a tripod.",           # official camera wording (type + amplitude + speed)
-     "action": "Ahe looks up at the teacher with a small grateful smile.",
+     # action: since 2026-10-23 write 50-120 words in the official order "Starting from <Picture 1>, ..." first-frame anchor ->
+     # action onset -> continuous development -> result; name the body parts, amplitude and repetitions, no abstract adjectives
+     # (our A/B 2026-10-23: one-line actions gave 1/2.7 of the motion). In-shot times ("at about 1.2 seconds") optional.
+     "action": "Starting from <Picture 1>, Ahe lifts his chin from the notebook and turns his head toward the teacher on his left. "
+               "His eyebrows rise, the corners of his mouth curl up slowly into a small grateful smile, and he gives one short nod.",
      "dialogue": [{"subject": "ahe", "line": "謝謝你讓我自己做。", "lang": "Chinese", "offscreen": false,
                    "after": "He closes his lips and keeps smiling."}],
      "at": null},                    # later shots: cut time in seconds, strictly increasing and < duration
@@ -117,7 +124,17 @@ def build_prompt(spec):
     if first:
         L.append("<Picture 1> is the first frame of [Shot 1], fixing the camera position, framing, set layout and lighting.")
     cam = spec.get("camera_video")
-    if cam:
+    motion = bool(cam) and cam.get("kind") == "motion"  # 2026-10-14: gray-mannequin video from make_whitemodel.py as the motion reference
+    if motion:
+        cols = cam.get("colors")  # 2026-10-15: per-person colored mannequins (make_whitemodel.py --colors), in <Subject> order
+        L.append("<Video 1> is ONLY a motion reference: " + (f"{len(cols)} smooth 3D mannequins colored " + ", ".join(cols) if cols else
+                 "smooth gray 3D mannequin" + ("s" if cam.get("people", 1) > 1 else ""))
+                 + " on a plain background performing the movement. Only body movement, timing, foot placement and arm positions are followed;"
+                 + (" the mannequin colors only tell the characters apart and are not reproduced;" if cols else "")
+                 + " the " + ("colored" if cols else "gray") + " skin, bald heads, adult body proportions and plain background are not reproduced, and the mannequins carry no props.")
+        if cols:
+            L.append(" ".join(f"<Subject {idx[s['key']]}> moves like the {c} mannequin." for s, c in zip(subs, cols)))
+    elif cam:
         L.append("<Video 1> is ONLY a " + cam.get("role", "Blender camera and spatial-layout guide")
                  + ": its low-poly proxy figures and flat colors are not characters or visual style; only its camera path and spatial relationships are followed.")
     if voice_ref:
@@ -151,7 +168,10 @@ def build_prompt(spec):
                  + (" and props" if s.get("props") else "") + " are retained.")
     if first:
         L.append("<Picture 1> ([Shot 1] first frame): fully_preserved - camera position, framing, set layout, furniture and lighting are retained.")
-    if cam:
+    if motion:
+        L.append("<Video 1> (motion reference): partially_preserved - body movement, timing, leg and arm positions are followed;"
+                 " the mannequins' appearance, proportions and background are discarded.")
+    elif cam:
         L.append("<Video 1> (camera path and spatial layout): partially_preserved - the camera trajectory and room geometry are followed; the proxy figures' appearance and stiffness are discarded.")
     if voice_ref:
         L.append("<Audio 1>: reference - only the voice timbre and accent are followed; the words of <Audio 1> are not reused.")
@@ -168,7 +188,16 @@ def build_prompt(spec):
             parts.append(" ".join(f"{_cap(s['desc'].split(',')[0].split(' (')[0])} is {lab(s['key'])}." for s in subs))
         if sh.get("camera"):
             parts.append(sh["camera"])
-        if i == 1 and cam:
+        if i == 1 and motion:
+            cols = cam.get("colors")
+            parts.append(cam.get("follow") or (" ".join(f"{_cap(s['desc'].split(',')[0].split(' (')[0])} moves exactly like the {c} mannequin in <Video 1>."
+                                                         for s, c in zip(subs, cols)) + " Same timing; everyone keeps their own body proportions."
+                                                if cols else
+                                                "The characters move exactly like the mannequins in <Video 1>, with the same timing, "
+                         "each keeping their own body proportions." if cam.get("people", 1) > 1 else
+                         f"{_cap(subs[0]['desc'].split(',')[0].split(' (')[0])} moves exactly like the mannequin in <Video 1>, with the same timing, "
+                         "keeping their own body proportions."))
+        elif i == 1 and cam:
             parts.append("The camera follows the path and spatial layout of <Video 1>.")
         if sh.get("action"):
             parts.append(sh["action"])
@@ -367,20 +396,23 @@ def build_graph(spec, prompt, base, tag):
         model = ["81", 0]
         g["9"]["inputs"]["model"] = model
     ctl = spec.get("control")  # optional H3 Fun ControlNet (pose/depth/canny control video); 2026-09-30
-    if ctl:
-        g["70"] = {"class_type": "LoadVideo", "inputs": {"file": stage(base / ctl["file"], f"{tag}_control.mp4")}}
-        g["71"] = {"class_type": "GetVideoComponents", "inputs": {"video": ["70", 0]}}
-        g["72"] = {"class_type": "ModelPatchLoader", "inputs": {"name": ctl.get("patch", "minimax_h3_fun_controlnet_union_pruned_int8_convrot.safetensors")}}
-        g["73"] = {"class_type": "MiniMaxH3FunControlNetApply", "inputs": {
-            "model": model, "model_patch": ["72", 0], "vae": ["3", 0], "strength": ctl.get("strength", 1.0),
-            "start_percent": ctl.get("start", 0.0), "end_percent": ctl.get("end", 1.0), "control_video": ["71", 0]}}
-        model = ["73", 0]
+    # 2026-10-09: may be a list -> chained applies (e.g. pose 0.6 + depth 0.3; community: keep total strength <= ~1)
+    # 2026-10-10: default patch = Union 2.0 (1.0 at total 0.95 still turned the subject; 2.0 did not). Old default: "patch": "minimax_h3_fun_controlnet_union_pruned_int8_convrot.safetensors"
+    for ci, one in enumerate(ctl if isinstance(ctl, list) else ([ctl] if ctl else [])):
+        o = 100 * ci  # ids 70-73, 170-173 (80-83 are taken by attention/LoRA/shift)
+        g[str(70 + o)] = {"class_type": "LoadVideo", "inputs": {"file": stage(base / one["file"], f"{tag}_control{ci}.mp4")}}
+        g[str(71 + o)] = {"class_type": "GetVideoComponents", "inputs": {"video": [str(70 + o), 0]}}
+        g[str(72 + o)] = {"class_type": "ModelPatchLoader", "inputs": {"name": one.get("patch", "minimax_h3_fun_controlnet_union_2.0_pruned_int8_convrot.safetensors")}}
+        g[str(73 + o)] = {"class_type": "MiniMaxH3FunControlNetApply", "inputs": {
+            "model": model, "model_patch": [str(72 + o), 0], "vae": ["3", 0], "strength": one.get("strength", 1.0),
+            "start_percent": one.get("start", 0.0), "end_percent": one.get("end", 1.0), "control_video": [str(71 + o), 0]}}
+        model = [str(73 + o), 0]
         g["9"]["inputs"]["model"] = model
     if spec.get("easycache"):
         g["50"] = {"class_type": "EasyCache", "inputs": {"model": model, "reuse_threshold": 0.2, "start_percent": 0.15, "end_percent": 0.95, "verbose": True}}
         model = ["50", 0]
         g["9"]["inputs"]["model"] = model
-    if use_veda(spec):  # 2026-10-16: Veda learned sparse attention, last on the MODEL wire (only the guider sees it)
+    if use_veda(spec):  # 2026-10-16: Veda learned sparse attention, last on the MODEL wire (only the guider sees it, the scheduler keeps the plain model)
         g["96"] = {"class_type": "VedaSparseAttention", "inputs": {"model": model, "predictor": VEDA_PREDICTOR, "generated_sparsity": "trained",
                    "reference_sparsity": "trained", "full_attention_layers": "", "full_attention_steps": "", "verbose": False}}
         model = ["96", 0]
@@ -412,7 +444,12 @@ def build_graph(spec, prompt, base, tag):
     elif audio.get("voice_ref"):  # timbre only, H3 speaks
         g["32"] = {"class_type": "LoadAudio", "inputs": {"audio": stage(base / audio["voice_ref"]["file"], f"{tag}_voice.wav")}}
         g["6"]["inputs"]["ref_audios.ref_audio_0"] = ["32", 0]
-    if spec.get("first_frame"):
+    if spec.get("first_clip"):  # 2026-10-10: multi-frame continuation - previous clip's last 5/22/39 frames anchored at frame 0 (AddGuide accepts 17k+5 frame clips)
+        g["44"] = {"class_type": "LoadVideo", "inputs": {"file": stage(base / spec["first_clip"], f"{tag}_firstclip.mp4")}}
+        g["45"] = {"class_type": "GetVideoComponents", "inputs": {"video": ["44", 0]}}
+        g["40"] = {"class_type": "MiniMaxH3AddGuide", "inputs": {"positive": cond, "latent": latent, "vae": ["3", 0], "image": ["45", 0], "frame_idx": 0}}
+        cond = ["40", 0]
+    elif spec.get("first_frame"):
         g["40"] = {"class_type": "MiniMaxH3AddGuide", "inputs": {"positive": cond, "latent": latent, "vae": ["3", 0], "image": ["5", 0], "frame_idx": 0}}
         cond = ["40", 0]
     if audio.get("fixed"):
@@ -458,7 +495,7 @@ def generate(spec, prompt, base, out):
                         "-c:a", "copy", str(out / "clip.mp4")], check=True)
     else:
         print(json.dumps(e.get("status", {}), ensure_ascii=False)[:3000])
-    meta = {"ok": ok, "length": length, "seed": spec.get("seed", 42), "wall_s": round(time.time() - t0, 1), "tag": tag}
+    meta = {"ok": ok, "length": length, "seed": spec.get("seed", 42), "wall_s": round(time.time() - t0, 1), "tag": tag, "veda": "96" in g}
     (out / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"[{'ok' if ok else 'FAIL'}] {out / 'clip.mp4'} {meta['wall_s']}s", flush=True)
     return ok
@@ -485,12 +522,24 @@ def main():
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
     out = Path(a.out or spec_path.with_suffix(""))
     out.mkdir(parents=True, exist_ok=True)
-    prompt = build_prompt(spec)
+    # 2026-10-10: "raw_prompt" bypasses the official 6-section builder + lint (e.g. CrossView-Warp LoRA was trained on the single caption "crossview")
+    prompt = spec.get("raw_prompt") or build_prompt(spec)
     (out / "prompt.txt").write_text(prompt, encoding="utf-8")
     shutil.copy2(spec_path, out / "shot.json")
-    E, W = lint(prompt, spec["duration"])
+    E, W = ([], ["raw_prompt: official-format lint skipped"]) if spec.get("raw_prompt") else lint(prompt, spec["duration"])
     if spec["duration"] > 12:
         W.append(f"duration {spec['duration']}s > 12 s: in this project 15 s clips drifted / self-cut; keep shots <= 12 s")
+    # 2026-10-23 A/B (6 shots x 2 seeds, optical flow): one-line actions -> ~1/2.7 of the motion; end frame = first frame freezes people
+    if not spec.get("raw_prompt"):
+        for i, sh in enumerate(spec["shots"], start=1):
+            n = len((sh.get("action") or "").split())
+            if 0 < n < 50:
+                W.append(f"[Shot {i}] action is short ({n} words): write 50-120 words 'Starting from <Picture 1>, ...' onset -> development -> result,"
+                         " with body parts, amplitude and repetitions (official h3-prompt-writing; one-liners moved ~1/2.7 as much)")
+        first, last = spec.get("first_frame"), spec.get("last_frame")
+        if first and last and (spec_path.parent / first).resolve() == (spec_path.parent / last).resolve():
+            W.append("last_frame = first_frame pins everyone back to the first pose (2026-10-23 S22: 100% still); fine for static/prop-lock shots,"
+                     " but if someone must move, use an end image of the finished pose or no end frame")
     for x in E:
         print("ERROR", x)
     for x in W:

@@ -62,7 +62,10 @@ docs/
 tools/                      全域工具（放到 C:\AI\tools）
   h3_shot.py ⭐             分鏡 JSON → 官方格式提示詞 → 格式檢查 → H3 生成
   make_breezyvoice.cmd      台詞配音備案：BreezyVoice 每句 8 候選 → 聽寫＋腔調自動挑（預設改由 H3 自己念）
-  gen_image.py              本機 Qwen-Image 2.1／Qwen-Image-Edit 生圖
+  gen_image.py              本機 Qwen-Image 2.1／Qwen-Image-Edit 生圖（`--turbo`＝8 步草稿模式）
+  make_whitemodel.py        舞蹈／武打：原片 → 灰色白模影片，當 H3 動作參考
+  make_narration.py         口播／旁白：BreezyVoice 一次念 2–3 句、停頓照標點、自動挑候選
+  cosy_vc.py                換聲：Seedance 等雲端影片的台詞換成角色音色，字的時間不變（選用）
   start_comfy.cmd           啟動 ComfyUI
   img25.py                  OpenAI Image 2.5 生圖／編輯（選用，雲端）
   pron_check.py／pron_compare.py  中文配音聲調審核
@@ -94,7 +97,7 @@ configs/profile.cmd         這個硬體版本的環境變數
 | 3 | 場景母版（空景，之後裁成各鏡景別） | `gen_image.py` | `docs/07` §4 | `masters/*.png` | |
 | 4 | 首幀（附定妝照＋母版裁切，**每鏡照抄角色完整外觀描述**） | `gen_image.py --model qwen-edit --ref` | `docs/07` §2–3 | `first/<鏡>.png` | ✅ 逐張看：臉、服裝、多手多腳、背景有沒有字 |
 | 5 | 角色聲音（一次） | `breeze_batch.py`（設計參考音） | `docs/03` §5 | `voice/ref_<角色>.wav` | ✅ 聽一次、定案後不換 |
-| 6 | H3 每鏡（DMAD 4 步、只給首幀；**有台詞給角色參考音 `audio.voice_ref`、H3 自己念**，一鏡一位說話者；看得到臉又沒台詞的鏡給靜音） | `h3_shot.py`（spec 加 `"draft": true`） | `docs/03` §4–5、`tools/examples/` | `h3/<鏡>/clip.mp4` | ✅ 抽格看：換臉、多人、鏡頭漂移；**聽寫比對台詞**（H3 會改用詞） |
+| 6 | H3 每鏡（DMAD 4 步、只給首幀；**有台詞給角色參考音 `audio.voice_ref`、H3 自己念**，一鏡一位說話者；看得到臉又沒台詞的鏡給靜音；**`action` 照官方結構寫 50–120 字具體動作**，動作鏡首幀畫動作開始前） | `h3_shot.py`（spec 加 `"draft": true`） | `docs/02` §6「動作寫法」、`docs/03` §4–5、`tools/examples/` | `h3/<鏡>/clip.mp4` | ✅ 抽格看：換臉、多人、鏡頭漂移；**聽寫比對台詞**（H3 會改用詞） |
 | 7 | 配樂（純器樂、多抽幾個 seed，挑人聲殘留最少的） | `gen_music3.py` → `audio-separator` | `docs/02` §9 | `music/*.flac` | |
 | 8 | 放大、剪接（H3 自己念的台詞不提前；BreezyVoice 備案台詞提前 0.2 秒）、配樂壓低（台詞期間 15–30%）、響度、字幕 | `upscale_vsr.py`、ffmpeg | `docs/02` §7、§10（**響度指令照抄，`alimiter` 要 `level=false`**） | `cut/<片名>_1080p.mp4` | |
 | 9 | 片尾（工具名單＋AI 生成標示） | `templates/ending/render_ending.py` | `templates/ending/README.md` | `ending.mp4` | |

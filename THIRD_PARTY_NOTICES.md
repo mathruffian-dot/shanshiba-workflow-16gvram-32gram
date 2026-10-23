@@ -23,7 +23,7 @@
 | Veda R2VA 打分器（`minimax_h3_r2va_veda_preview_fp8`，Colab 版自動下載；2026-10-16 加入） | 沿用 MiniMax H3 Community License（作者標示） | 同 H3 | 同 H3 | https://huggingface.co/Veda-Sparse/Minimax-H3-R2VA-Veda-Preview |
 | H3 Fun ControlNet patches | 沿用 MiniMax H3 Community License | 同 H3 | 同 H3 | https://huggingface.co/alibaba-pai/MiniMax-H3-Fun-Controlnet-Union-2.0 |
 | Qwen3-VL-32B Heretic 文字編碼器（ethanfel，INT8 ConvRot） | Apache-2.0（上游 Qwen3-VL-32B-Instruct 亦 Apache-2.0） | 可以 | 保留授權；與 H3 併用時 H3 使用規範照樣適用 | https://huggingface.co/ethanfel/Qwen3-VL-32B-Ultra-Heretic-H3-ComfyUI-INT8-ConvRot |
-| **Qwen-Image 2.1**（含 Comfy-Org 版） | **Qwen RESEARCH LICENSE AGREEMENT** | **不可以**（僅研究／評估；商用請洽 model-business@notice.qwencloud.com） | 轉散布附授權全文與聲明「Qwen is licensed under the Qwen RESEARCH LICENSE AGREEMENT, Copyright (c) 2026 Hangzhou Tongyi Laboratory Technology Co., Ltd. All Rights Reserved.」；用它做或改進模型須標「Built with Qwen」 | https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE |
+| **Qwen-Image 2.1**（含 Comfy-Org 版、2.1 Turbo 草稿模型） | **Qwen RESEARCH LICENSE AGREEMENT** | **不可以**（僅研究／評估；商用請洽 model-business@notice.qwencloud.com） | 轉散布附授權全文與聲明「Qwen is licensed under the Qwen RESEARCH LICENSE AGREEMENT, Copyright (c) 2026 Hangzhou Tongyi Laboratory Technology Co., Ltd. All Rights Reserved.」；用它做或改進模型須標「Built with Qwen」 | https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE |
 | Qwen-Image-Edit 2511（含 Comfy-Org 版）、Qwen2.5-VL-7B 文字編碼器 | Apache-2.0 | 可以 | 保留授權與 NOTICE | https://huggingface.co/Qwen/Qwen-Image-Edit-2511 |
 | MiniMax Music 3 | MiniMax-Music3 COMMUNITY LICENSE（2026-08-06）；Comfy-Org 版標示的 Apache-2.0 **與原始授權不符，以原始為準** | 可以（年營收 > 2,000 萬美元需授權） | 保留聲明；商業產品顯著標示「MiniMax-Music3」；公開內容標示機器生成；不得冒充他人 | https://huggingface.co/MiniMaxAI/MiniMax-Music3/blob/main/LICENSE |
 | VoxCPM2（權重與程式碼） | Apache-2.0 | 可以 | 嚴禁冒充他人、詐騙、假訊息；強烈建議標示 AI 生成 | https://huggingface.co/openbmb/VoxCPM2 |
@@ -35,6 +35,8 @@
 | FlashVSR v1.1 | Apache-2.0（含 Wan2.1 VAE，Apache-2.0） | 可以 | 保留授權 | https://huggingface.co/JunhaoZhuang/FlashVSR-v1.1 |
 | 動作 LoRA：JOKER141 Combat-Base-V2、GunFu、Motion-Continuity-Repair；RunningHubAI speed-slider-1.1 | **未標示授權**（等同保留所有權利）；同時是 H3 衍生作品 | 不明 | 只附連結、不轉散布；至少須遵守 H3 授權 | https://huggingface.co/JOKER141 、https://huggingface.co/RunningHubAI/rh-h3-speed-slider-1.1-lora |
 | SDPose（Comfy-Org 打包）、RT-DETRv4 | MIT／Apache-2.0（SD 底模授權未查） | 大致可以 | 保留授權 | https://huggingface.co/Comfy-Org/SDPose |
+| SAM 3D Body、SAM 3.1、MoGe-3（Comfy-Org 打包；白模動作參考 `make_whitemodel.py`，2026-10-23 加入） | 各自官方授權（Meta SAM License／Microsoft MoGe；**本 repo 未逐條查核**） | 請自行查核 | 本 repo 不含權重，只附下載清單 `setup/downloads_whitemodel.json` | https://huggingface.co/Comfy-Org/sam-3d-body 、 https://huggingface.co/Comfy-Org/sam3.1 、 https://huggingface.co/Comfy-Org/MoGe |
+| MiniMax 官方 `h3-prompt-writing` 技能（寫提示詞的規則文件） | MiniMax H3 Community License | 同 H3 | 本 repo 不含，文件只教你從官方 repo 安裝 | https://github.com/MiniMax-AI/MiniMax-H3/tree/main/skills/h3-prompt-writing |
 | YuE2（選用） | CC BY-NC 4.0 | 不可以 | 署名、非商業 | https://huggingface.co/m-a-p |
 | OpenAI Image 2.5 API（選用，雲端） | OpenAI Services Agreement | 可以 | 產出歸客戶（第 4.1 條）；另須遵守 Usage Policies | https://cdn.openai.com/osa/openai-services-agreement.pdf |
 
