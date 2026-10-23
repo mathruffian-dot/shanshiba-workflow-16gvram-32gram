@@ -7,7 +7,7 @@
 ## 用法
 
 1. 把整個 `template_local/` 複製一份到 `pipeline/` 底下，改名成你的片名，例如 `pipeline/my_film/`。如果複製到別的地方，請把 `film.json` 的 `repo_dir` 改成指向本 repo 根目錄（片尾範本在 `<repo>/templates/ending/`）。
-2. 改 `film.json`（欄位說明見下一節）。劇本先用 `agent/skills/shanshiba-drama` 寫好，再把鏡表填進 `shots`。
+2. 改 `film.json`（欄位說明見下一節）。劇本先用 `agent/skills/shanshiba-drama` 寫好、做完生成前試映（16 宮格草圖＋讀本，`tools/make_storyboard.py`、`tools/assemble_read.py`，見技能的 `references/table-read.md`），聽過說「通過」再把鏡表填進 `shots`。
 3. 在同一個 cmd 視窗執行：
    ```
    set PYTHONUTF8=1

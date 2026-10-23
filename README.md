@@ -89,6 +89,7 @@ configs/profile.cmd         這個硬體版本的環境變數
 | # | 步驟 | 工具 | 看哪份文件 | 產出 | 要人工看嗎 |
 |---|---|---|---|---|---|
 | 1 | 劇本＋鏡表（每鏡 ≤12 秒） | `agent/skills/shanshiba-drama` | SKILL.md 開頭的版本說明、`docs/03` | `劇本.md` | ✅ 確認劇本 |
+| 1.5 | 生成前試映：16 宮格分鏡草圖＋讀本（量實際片長） | `make_storyboard.py`（要 OpenAI 金鑰，沒有就跳過草圖）、`make_breezyvoice.cmd`、`assemble_read.py` | `agent/skills/shanshiba-drama/references/table-read.md` | `preview/讀本試映.mp4` | ✅ 聽完說「通過」才做首幀 |
 | 2 | 角色定妝照（單張、灰底、半身） | `gen_image.py`（Qwen-Image 2.1） | `docs/07` §1 | `chars/<角色>.png` | ✅ 挑一張定案 |
 | 3 | 場景母版（空景，之後裁成各鏡景別） | `gen_image.py` | `docs/07` §4 | `masters/*.png` | |
 | 4 | 首幀（附定妝照＋母版裁切，**每鏡照抄角色完整外觀描述**） | `gen_image.py --model qwen-edit --ref` | `docs/07` §2–3 | `first/<鏡>.png` | ✅ 逐張看：臉、服裝、多手多腳、背景有沒有字 |
@@ -125,6 +126,7 @@ configs/profile.cmd         這個硬體版本的環境變數
 | 模型權重 | 檔案大、各有授權 | 照 [AGENT_SETUP.md](AGENT_SETUP.md) 第 3 節下載（約 150GB） |
 | 成片影片 | 檔案大 | 看頻道 |
 | OpenAI 金鑰（選用） | 預設不用；想改用雲端 Image 2.5 生首幀才需要 | 設環境變數 `OPENAI_API_KEY`，用 `tools/img25.py` |
+| Kie.ai 金鑰（選用） | 想用雲端 Seedance 2.5 生影片才需要（約 63 點／秒，200 點 ≈ 1 美元） | 設環境變數 `KIE_API_KEY`，用 `tools/sd25_shot.py`；有台詞的鏡一定給角色參考音 |
 | Google AI 方案／Colab 運算單元（選用） | 本機跑不動 H3 時才需要 | 見 [cloud/README.md](cloud/README.md) |
 
 （音效有附：`sfx/` 裡 58 個 Freesound CC0 音效。）

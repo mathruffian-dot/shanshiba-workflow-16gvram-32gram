@@ -36,7 +36,7 @@
 - 配音：角色參考音定了就不換；**畫面內台詞預設讓 H3 拿角色參考音自己念**（spec `"audio": {"voice_ref": {...}}`，一鏡一位說話者），逐鏡聽寫比對原文、抽 2 個 seed；念錯抽不出來、數字日期難字才改用 `C:\AI\tools\make_breezyvoice.cmd jobs.json`（BreezyVoice，每句 8 候選自動挑，念不準的字標注音 `連假[:ㄐㄧㄚ4]`）當固定音軌，`needs_review` 的句子請人聽。
 - 配樂：MiniMax Music 3 純器樂。
 - 放大：近景 RTX VSR、全景 FlashVSR。
-- 雲端影片服務（Seedance 等）：使用者明說才用。
+- 雲端影片服務（Seedance 等）：使用者明說才用。Seedance 2.5 一律用 `tools/sd25_shot.py`（720p，吃 H3 同一份 spec）：**有台詞的鏡一定給角色參考音**（參考模式），角色沒有參考音才讓 2.5 自己生聲音。
 
 ## 工作習慣
 

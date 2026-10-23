@@ -40,7 +40,7 @@ Claude Code 的記憶資料夾，每個檔案一件事，分四類：
 
 ## 技能（Skills）
 
-- `agent/skills/shanshiba-drama/`：編劇九階段流程、16:9 劇本格式、審稿清單。
+- `agent/skills/shanshiba-drama/`：編劇九階段流程＋階段關卡、預設 9:16 劇本與鏡表格式、生成前試映（16 宮格分鏡草圖＋讀本）、審稿清單。
 - `agent/skills/blender-previs/`：需求訪談 → 鏡位契約 → 布置圖檢查 → 提示詞包。
 
 > ⚠️ 兩個技能寫於專案早期，裡面還有「Seedance 2.5、30 秒一段」「Qwen 生圖、768p」等舊說法。現行做法以 docs/ 為準（本機 H3、單鏡 ≤12 秒、Image 2.5 首幀、DMAD）。
