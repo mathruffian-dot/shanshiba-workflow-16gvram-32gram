@@ -1,0 +1,22 @@
+# Optional: wide-shot small-face refine (tools/face_refine.py, ComfyUI-H3-FaceRefine).
+# Install into the H3 venv AFTER requirements_h3_venv.txt, with --no-deps (their own deps are already pinned there):
+#   uv pip install --python C:\AI\H3\venv\Scripts\python.exe --no-deps -r requirements_facerefine.txt
+# Exact set added on the original machine 2026-10-24 (pip freeze diff); torch / numpy were not touched.
+contourpy==1.4.0
+cycler==0.12.1
+fonttools==4.67.0
+kiwisolver==1.5.1
+matplotlib==3.11.2
+nvidia-ml-py==13.615.71
+opencv-python==5.0.0.93
+platformdirs==4.13.5
+polars==2.0.0
+polars-runtime-32==2.0.0
+pyparsing==3.3.3
+python-dateutil==3.0.0
+scenedetect==0.7.2
+six==1.17.0
+tzdata==2026.5
+ultralytics==8.4.184
+ultralytics-platform==0.1.92
+ultralytics-thop==2.2.3

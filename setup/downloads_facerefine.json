@@ -1,0 +1,23 @@
+[
+ {
+  "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+  "sha256": "e889202c41dafb67b10d67b97f0d8541508036a6090af23425a5c2615d03c47a",
+  "size": 20970379616,
+  "destination": "C:/AI/H3/models/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+  "name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors"
+ },
+ {
+  "url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/30f485ed874aa44c8183348ad361c5eabad318da/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+  "sha256": "2339acdf19bfe123f46b971ea35d367a84adb85de43627e1eceafa5a5b2b111e",
+  "size": 1956193000,
+  "destination": "C:/AI/H3/ComfyUI-0.36.0/models/loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+  "name": "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors"
+ },
+ {
+  "url": "https://huggingface.co/Bingsu/adetailer/resolve/53cc19de382014514d9d4038601d261a7faa9b7b/face_yolov8m.pt",
+  "sha256": "717923c19b3f4bbf5250b728f1fa6b2cb72a33aed1d236ea9caf0e21ad943e5f",
+  "size": 52026019,
+  "destination": "C:/AI/H3/ComfyUI-0.36.0/models/ultralytics/bbox/face_yolov8m.pt",
+  "name": "face_yolov8m.pt"
+ }
+]

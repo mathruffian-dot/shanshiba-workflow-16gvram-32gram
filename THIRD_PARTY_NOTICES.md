@@ -37,6 +37,12 @@
 | SDPose（Comfy-Org 打包）、RT-DETRv4 | MIT／Apache-2.0（SD 底模授權未查） | 大致可以 | 保留授權 | https://huggingface.co/Comfy-Org/SDPose |
 | SAM 3D Body、SAM 3.1、MoGe-3（Comfy-Org 打包；白模動作參考 `make_whitemodel.py`，2026-10-23 加入） | 各自官方授權（Meta SAM License／Microsoft MoGe；**本 repo 未逐條查核**） | 請自行查核 | 本 repo 不含權重，只附下載清單 `setup/downloads_whitemodel.json` | https://huggingface.co/Comfy-Org/sam-3d-body 、 https://huggingface.co/Comfy-Org/sam3.1 、 https://huggingface.co/Comfy-Org/MoGe |
 | MiniMax 官方 `h3-prompt-writing` 技能（寫提示詞的規則文件） | MiniMax H3 Community License | 同 H3 | 本 repo 不含，文件只教你從官方 repo 安裝 | https://github.com/MiniMax-AI/MiniMax-H3/tree/main/skills/h3-prompt-writing |
+| 遠景小臉精修（`tools/face_refine.py`，選用，2026-10-24 加入）：MiniMax H3 FL2VA 剪枝 int8（Comfy-Org） | MiniMax H3 Community License | 同 H3 | 同 H3 | https://huggingface.co/Comfy-Org/MiniMax-H3 |
+| 同上：lightx2v `minimax_h3_fl2v_turbo_8step_v1.0` LoRA | **模型卡未標示授權**；H3 蒸餾衍生作品 | 不明（至少受 H3 授權約束） | 只附下載連結、不轉散布 | https://huggingface.co/lightx2v/Minimax-h3-Turbo |
+| 同上：`face_yolov8m.pt`（Bingsu/adetailer） | Apache-2.0 | 可以 | 保留授權；`.pt` 是 pickle 格式，只從這個來源下載並核對 sha256 | https://huggingface.co/Bingsu/adetailer |
+| 同上：ComfyUI-H3-FaceRefine 節點 | MIT | 可以 | 保留授權 | https://github.com/Carasibana/ComfyUI-H3-FaceRefine |
+| 同上：ComfyUI-H3-NativeAudioLock 節點（71 行，放在另一個工作流 repo 裡） | **原 repo 沒有授權檔**（等同保留所有權利） | 不明 | 本 repo 不複製，只教你自己去拿；用前先讀過程式 | https://github.com/Shrek3OnVH5/MiniMax-H3-NativeAudio-MusicVideo-Workflow |
+| 同上：ultralytics（偵測器執行套件） | **AGPL-3.0** | 有條件（散布或提供網路服務須依 AGPL 開放原始碼；只在自己電腦上跑不受影響） | 保留授權 | https://github.com/ultralytics/ultralytics |
 | YuE2（選用） | CC BY-NC 4.0 | 不可以 | 署名、非商業 | https://huggingface.co/m-a-p |
 | OpenAI Image 2.5 API（選用，雲端） | OpenAI Services Agreement | 可以 | 產出歸客戶（第 4.1 條）；另須遵守 Usage Policies | https://cdn.openai.com/osa/openai-services-agreement.pdf |
 
