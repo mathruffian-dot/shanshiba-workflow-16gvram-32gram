@@ -67,9 +67,15 @@ def run_hybrid(dirs, pyh3=None, tools=None):
     relay = [d for d in dirs if _relay(d)]                          # 最後才由本機照順序跑
     shared = collections.deque(d for d in dirs if d not in relay)
     lock = threading.Lock(); stats = {"local": 0, "cloud": 0}; cloud_on = len(shared) >= nmin
+    # 2026-10-25（使用者：「Colab 比較快，要分配比較多的片段給他」）：開跑就照速度比例替雲端保留一份（預設
+    # 本機 62 秒／支 vs 雲端 30 秒／支 → 雲端約 2/3），本機不能先拿走；本機自己那份做完才去接雲端還沒送出的。
+    # 之前是共用佇列，雲端第一批要載模型（〈畢氏定理 MV〉8 支 8.5 分）期間本機一直拿，結果本機分得比雲端多。
+    share = float(os.environ.get("HYBRID_CLOUD_SHARE", LOCAL_SEC / (LOCAL_SEC + CLOUD_SEC))) if cloud_on else 0.0
+    reserve = collections.deque(shared.pop() for _ in range(int(round(len(shared) * share))))   # 從尾巴拿＝雲端照舊做後段
     speed = {"local": [], "cloud": []}                              # 實測秒數，用來估算尾巴該怎麼分
     t0 = time.time()
-    _log(f"[hybrid] {len(dirs)} 鏡（接力鏡 {len(relay)} 支只在本機）；" + ("本機＋Colab 一起跑" if cloud_on else f"少於 {nmin} 支，全部本機跑"))
+    _log(f"[hybrid] {len(dirs)} 鏡（接力鏡 {len(relay)} 支只在本機）；" + (f"本機＋Colab 一起跑：先保留 {len(reserve)} 支給雲端、"
+         f"{len(shared)} 支給本機（HYBRID_CLOUD_SHARE={share:.2f}）" if cloud_on else f"少於 {nmin} 支，全部本機跑"))
 
     def avg(k, default):
         v = speed[k]
@@ -78,7 +84,12 @@ def run_hybrid(dirs, pyh3=None, tools=None):
     def local_worker(do_relay=False):
         while True:
             with lock:
-                d = shared.popleft() if shared else (relay.pop(0) if do_relay and relay else None)
+                if shared:
+                    d = shared.popleft()
+                elif reserve and not do_relay:              # 自己那份做完 → 接雲端還沒送出的（從前面拿，雲端從後面拿）
+                    d = reserve.popleft(); _log(f"[hybrid] 本機做完自己的，接手雲端保留的 {d.name}")
+                else:
+                    d = relay.pop(0) if do_relay and relay else None
             if d is None:
                 return
             if (d / "clip.mp4").exists():
@@ -101,13 +112,23 @@ def run_hybrid(dirs, pyh3=None, tools=None):
         if colab("start", "--h3-only").returncode != 0:
             _log("[hybrid] Colab 開不起來 → 剩下的全部本機跑"); return
         try:
+            first = True
             while True:
                 with lock:
-                    rem = len(shared)
-                    n = min(chunk, rem) if rem > 2 * chunk else cloud_take(rem, chunk, avg("local", LOCAL_SEC), avg("cloud", CLOUD_SEC))
-                    if n < 2:                                       # 剩下的本機做比較快（不用上傳下載、不用等雲端）
-                        return
-                    batch = [shared.pop() for _ in range(n)]
+                    if reserve:                                     # 先做保留給雲端的那份
+                        rem = len(reserve) + len(shared)
+                        # 收尾（2026-10-25 高斯 MV：最後一批雲端一次拿 8 支跑 8 分，本機早做完閒了 6 分）：
+                        # 剩不到兩批時照實測速度估雲端這批該拿幾支，其餘留在 reserve 讓本機做完自己的之後接手
+                        n = min(chunk, len(reserve)) if rem > 2 * chunk else max(2, min(len(reserve), cloud_take(
+                            rem, chunk, avg("local", LOCAL_SEC), avg("cloud", CLOUD_SEC))))
+                        n = min(n, len(reserve))                    # 2026-10-27：保留只剩 1 支時 max(2,…) 會多拿 → pop 空佇列
+                        batch = [reserve.pop() for _ in range(n)]
+                    else:
+                        rem = len(shared)
+                        n = min(chunk, rem) if rem > 2 * chunk else cloud_take(rem, chunk, avg("local", LOCAL_SEC), avg("cloud", CLOUD_SEC))
+                        if n < 2:                                   # 剩下的本機做比較快（不用上傳下載、不用等雲端）
+                            return
+                        batch = [shared.pop() for _ in range(n)]
                 todo = [d for d in batch if not (d / "clip.mp4").exists()]
                 if not todo:
                     continue
@@ -119,8 +140,10 @@ def run_hybrid(dirs, pyh3=None, tools=None):
                 with lock:
                     stats["cloud"] += done
                     shared.extend(back)                             # 失敗的放回佇列，本機會拿去做
-                    if done:
+                    if done and not first:                          # 第一批含載模型暖機，不拿來估速度（會把雲端估得太慢）
                         speed["cloud"].append(max(1.0, (time.time() - ts - CLOUD_OVERHEAD) / done))
+                _log(f"[hybrid] 雲端這批 {done} 支 {time.time() - ts:.0f} 秒" + ("（第一批含暖機）" if first else ""))
+                first = False
                 if back:
                     _log(f"[hybrid] 雲端失敗 {len(back)} 支，放回佇列：{' '.join(d.name for d in back)}")
         finally:
