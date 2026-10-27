@@ -1,0 +1,9 @@
+[
+ {
+  "url": "https://huggingface.co/Comfy-Org/YuE2/resolve/2f76ca75e6ee094169de899cc7fc99d6887e2196/checkpoints/yue2_3b_int8_convrot.safetensors",
+  "sha256": "96fe199377309001ed8cd26a944baeee8cc31a20ba7c36d1d3c0a7e1f4149db6",
+  "size": 3960938800,
+  "destination": "C:/AI/H3/ComfyUI-0.36.0/models/checkpoints/yue2_3b_int8_convrot.safetensors",
+  "name": "checkpoints/yue2_3b_int8_convrot.safetensors"
+ }
+]

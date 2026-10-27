@@ -44,6 +44,7 @@
 | 同上：ComfyUI-H3-NativeAudioLock 節點（71 行，放在另一個工作流 repo 裡） | **原 repo 沒有授權檔**（等同保留所有權利） | 不明 | 本 repo 不複製，只教你自己去拿；用前先讀過程式 | https://github.com/Shrek3OnVH5/MiniMax-H3-NativeAudio-MusicVideo-Workflow |
 | 同上：ultralytics（偵測器執行套件） | **AGPL-3.0** | 有條件（散布或提供網路服務須依 AGPL 開放原始碼；只在自己電腦上跑不受影響） | 保留授權 | https://github.com/ultralytics/ultralytics |
 | YuE2（選用） | CC BY-NC 4.0 | 不可以 | 署名、非商業 | https://huggingface.co/m-a-p |
+| ACE-Step 1.5 XL（選用，`tools/ace_song.py`；2026-10-27 加入） | MIT（ACE-Step 官方模型卡）；Comfy-Org 打包頁標 Apache-2.0 | 可以 | 保留授權 | https://huggingface.co/ACE-Step/Ace-Step1.5 |
 | OpenAI Image 2.5 API（選用，雲端） | OpenAI Services Agreement | 可以 | 產出歸客戶（第 4.1 條）；另須遵守 Usage Policies | https://cdn.openai.com/osa/openai-services-agreement.pdf |
 
 ## 軟體

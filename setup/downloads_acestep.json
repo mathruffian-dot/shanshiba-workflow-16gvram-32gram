@@ -1,0 +1,37 @@
+[
+ {
+  "url": "https://huggingface.co/Comfy-Org/ace_step_1.5_ComfyUI_files/resolve/6707deb277e9e0907fd9c14ce6b6f1d695c6a3fc/split_files/diffusion_models/acestep_v1.5_xl_sft_bf16.safetensors",
+  "sha256": "3c05ae268353b3540fb1fd7db4fd77ffbda9802ec641b624e15648e030ecf3ce",
+  "size": 9974719930,
+  "destination": "C:/AI/H3/models/diffusion_models/acestep_v1.5_xl_sft_bf16.safetensors",
+  "name": "diffusion_models/acestep_v1.5_xl_sft_bf16.safetensors"
+ },
+ {
+  "url": "https://huggingface.co/Comfy-Org/ace_step_1.5_ComfyUI_files/resolve/6707deb277e9e0907fd9c14ce6b6f1d695c6a3fc/split_files/diffusion_models/acestep_v1.5_xl_turbo_bf16.safetensors",
+  "sha256": "86a1afb0a1f711f0e3304ff65d874df3ae6783db683dcf982513fb9b6d14ae71",
+  "size": 9974719892,
+  "destination": "C:/AI/H3/models/diffusion_models/acestep_v1.5_xl_turbo_bf16.safetensors",
+  "name": "diffusion_models/acestep_v1.5_xl_turbo_bf16.safetensors"
+ },
+ {
+  "url": "https://huggingface.co/Comfy-Org/ace_step_1.5_ComfyUI_files/resolve/6707deb277e9e0907fd9c14ce6b6f1d695c6a3fc/split_files/text_encoders/qwen_0.6b_ace15.safetensors",
+  "sha256": "fd4590c82153b8ddb67e15a2e7aaa8afa8b83a858c8a9b82a4831063156aa7a7",
+  "size": 1191588248,
+  "destination": "C:/AI/H3/models/text_encoders/qwen_0.6b_ace15.safetensors",
+  "name": "text_encoders/qwen_0.6b_ace15.safetensors"
+ },
+ {
+  "url": "https://huggingface.co/Comfy-Org/ace_step_1.5_ComfyUI_files/resolve/6707deb277e9e0907fd9c14ce6b6f1d695c6a3fc/split_files/text_encoders/qwen_4b_ace15.safetensors",
+  "sha256": "ffe5ffb855086c2ab55e467e9859fb01894781020a0376484dd19de166b79873",
+  "size": 8379154232,
+  "destination": "C:/AI/H3/models/text_encoders/qwen_4b_ace15.safetensors",
+  "name": "text_encoders/qwen_4b_ace15.safetensors"
+ },
+ {
+  "url": "https://huggingface.co/Comfy-Org/ace_step_1.5_ComfyUI_files/resolve/6707deb277e9e0907fd9c14ce6b6f1d695c6a3fc/split_files/vae/ace_1.5_vae.safetensors",
+  "sha256": "6de92e3a862acd287e08b024ac90f0783a8635451b728721a33ff03565bcb2bb",
+  "size": 337431732,
+  "destination": "C:/AI/H3/models/vae/ace_1.5_vae.safetensors",
+  "name": "vae/ace_1.5_vae.safetensors"
+ }
+]
