@@ -100,6 +100,19 @@ xcopy /E /I <repo>\setup\breezyvoice\winstub C:\AI\BreezyVoice\winstub
 xcopy /E /I <repo>\tools C:\AI\tools
 ```
 
+### 2f.（選用）Ming-3.0-TTS 0.5B 固定音軌（MIT，可營利；原專案 2026-10-29 起的配音備案預設）
+
+H3 念錯抽不出來的台詞，用角色參考音念成固定音軌（`tools\make_ming.cmd jobs.json`，格式同 BreezyVoice）。原專案把節點裝在**另一份 ComfyUI 0.41**（`C:\AI\H3\ComfyUI-0.41.0`、8189 埠，`models`／`input`／`output` 連到主 ComfyUI），H3 用的那份不動；節點只在 0.41 測過。
+
+```
+git clone https://github.com/Saganaki22/ComfyUI-Ming-3-tts C:\AI\H3\ComfyUI-0.41.0\custom_nodes\ComfyUI-Ming-3-tts
+cd C:\AI\H3\ComfyUI-0.41.0\custom_nodes\ComfyUI-Ming-3-tts && git checkout 1e97248
+C:\AI\H3\venv\Scripts\python.exe -m pip install onnxruntime flatbuffers protobuf
+cd <repo>\setup && C:\AI\H3\venv\Scripts\python.exe download.py downloads_ming.json
+```
+- 路徑或埠不同：設環境變數 `MING_COMFY_DIR`、`MING_COMFY_PORT`、`MING_COMFY_INPUT`、`MING_COMFY_OUTPUT`。`make_ming.py` 會自己在背景啟動那份 ComfyUI，跑完叫它釋放顯存。
+- 裝之前先存一份 `pip freeze`（原專案裝完是 onnxruntime 1.31.1，H3 照常）。
+
 ## 3. 下載模型（全部鎖定版本、逐檔驗證雜湊、可續傳）
 
 cmd 視窗：
@@ -126,6 +139,7 @@ foreach ($f in 'downloads.json','downloads_uncensored.json','downloads_dmad.json
 | `downloads_breeze_tts2.json` | Breeze TTS 2（含 tokenizer、audio_tokenizer；只用來設計新角色的參考音） | 7.1GB |
 | `downloads_breezyvoice.json` | BreezyVoice-300M（**台詞配音**） | 3.0GB |
 | `downloads_flashvsr.json` | FlashVSR v1.1 | 6.3GB |
+| `downloads_ming.json`（選用） | Ming-3.0-TTS 0.5B（固定音軌配音，見 2f） | 3.0GB |
 | 選用 | `downloads_action_loras.json`（動作 LoRA）、`downloads_funcontrol.json`（舞蹈骨架控制）、`downloads_whitemodel.json`（舞蹈／武打白模動作參考，7.2GB；多人上色節點在 `setup/comfy_nodes/whitemodel_color`）、`downloads_qwen_turbo.json`（首幀草稿模式，7.3GB） | — |
 
 另外四個會自動下載的：

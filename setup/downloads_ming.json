@@ -1,0 +1,9 @@
+[
+ {
+  "url": "https://huggingface.co/drbaph/Ming-3.0-tts-ComfyUI/resolve/85504353d3cc0c43641e69751d6f0aed9b9b646d/checkpoints/Ming-3.0-tts-0.5b/model.safetensors",
+  "sha256": "45c4d78d8ad6b1d942e3da86ba035fece02de569f7b2ca7e9d121dfaf18d674c",
+  "size": 2959055504,
+  "destination": "C:/AI/H3/ComfyUI-0.36.0/models/checkpoints/Ming-3.0-tts-0.5b/model.safetensors",
+  "name": "Ming-3.0-tts-0.5b/model.safetensors"
+ }
+]

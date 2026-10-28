@@ -4,6 +4,7 @@ Nvidia_RTX_Nodes_ComfyUI | https://github.com/Comfy-Org/Nvidia_RTX_Nodes_ComfyUI
 ComfyUI-FlashVSR_Ultra_Fast | https://github.com/lihaoyun6/ComfyUI-FlashVSR_Ultra_Fast.git | 4820b3f | FlashVSR upscale for wide shots (flashvsr_cli.py loads it directly)
 ComfyUI-Fisher-Pose | https://github.com/Work-Fisher/ComfyUI-Fisher-Pose.git | d116451 | optional: pose control for still images
 ComfyUI-H3-FaceRefine | https://github.com/Carasibana/ComfyUI-H3-FaceRefine.git | d8521d1 | optional: wide-shot small-face refine (tools/face_refine.py); MIT; tested on ComfyUI 0.40 only
+ComfyUI-Ming-3-tts | https://github.com/Saganaki22/ComfyUI-Ming-3-tts.git | 1e97248 | optional: Ming-3.0-TTS 0.5B fixed-track voice (tools/make_ming.py); MIT; needs pip onnxruntime flatbuffers protobuf; tested on ComfyUI 0.41 only (separate install on port 8189)
 # optional, same feature: ComfyUI-H3-NativeAudioLock is a 71-line node that lives INSIDE another repo and has NO license file, so this
 # repo does not copy it. Fetch it yourself: git clone https://github.com/Shrek3OnVH5/MiniMax-H3-NativeAudio-MusicVideo-Workflow.git
 # (commit 11a95f6), then copy its custom_nodes/ComfyUI-H3-NativeAudioLock folder into ComfyUI/custom_nodes/. Read it before installing.
