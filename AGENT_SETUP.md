@@ -163,7 +163,7 @@ C:\AI\H3\venv\Scripts\python.exe <repo>\pipeline\demo_local\run_demo.py
 
 ## 6. 開始做片
 
-讀 `docs/03_規則與踩坑.md`（規則）和 `pipeline/template_local/README.md`（做法），把 `agent/CLAUDE.md範本.md` 放到使用者的專案根目錄改名 `CLAUDE.md`。做新片：用 `agent/skills/shanshiba-drama` 寫劇本 → 複製 `pipeline/template_local/` 成新資料夾 → 把角色、場景、鏡表填進 `film.json` → `make_film.py` 分段跑，三個人工關卡（首幀總覽、每鏡抽格、成片）都要給使用者看。
+讀 `docs/03_規則與踩坑.md`（規則）和 `pipeline/template_local/README.md`（做法），把 `agent/CLAUDE.md範本.md` 放到使用者的專案根目錄改名 `CLAUDE.md`。做新片：用 `agent/skills/shanshiba-drama` 寫劇本 → 複製 `pipeline/template_local/` 成新資料夾 → 把角色、場景、鏡表填進 `film.json` → `make_film.py` 分段跑，三個人工關卡（首幀總覽、每鏡抽格、成片）都要給使用者看。做饒舌對決：用 `agent/skills/rap-battle`（生歌前先問使用者有沒有 Suno）→ 複製 `pipeline/template_battle/` → 填 `battle.json` → `make_battle.py`。
 
 ## 常見問題
 

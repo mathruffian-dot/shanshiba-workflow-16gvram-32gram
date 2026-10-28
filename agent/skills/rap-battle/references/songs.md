@@ -1,0 +1,65 @@
+# 生歌、檢查、接法
+
+## 先問：有沒有 Suno？
+
+| 情況 | 用什麼 | 備註 |
+|:--|:--|:--|
+| 有 Suno 帳號 | **Suno**（網頁 Custom 模式，或 Kie.ai API） | 編曲最豐富、rap 最有攻擊性、會自帶刷碟聲。四場對決都用它 |
+| 沒有 Suno | 先問使用者 → **YuE2 14 版**（`templates/song_yue2_v14/`） | 本機 ComfyUI 原生節點；比 Suno 平、攻擊性弱；權重 CC BY-NC |
+| YuE2 也不行 | ACE-Step 1.5 XL（`tools/ace_song.py`） | 拍速最穩、MIT；人聲有金屬聲 |
+| 本機沒顯卡 | Suno 最省事 | Colab 版安裝沒有預裝 YuE2（未實測） |
+
+不要自己從 Suno 換成 YuE2：換之前一定問。
+
+## Suno
+
+1. `make_battle.py songtext` → `out/songtext/suno_A_lyrics.txt`、`suno_A_style.txt`（B 同理）。
+2. **網頁**：Create → Custom，Lyrics 貼歌詞、Styles 貼風格，每人各生一首（一次 2 版）。**API**：`python kie_suno.py submit A` → `poll a1`（環境變數 `KIE_API_KEY`；每次 2 版約 12 點）。
+3. 每人先抽 2 版，不滿意再改風格抽；挑好的放到 `song/A.mp3`、`song/B.mp3`。
+
+### 風格寫法（英文，≤ 1000 字元）
+
+依序寫：
+1. 結構：`ONE CONTINUOUS RAP SONG by ONE rapper … EXACTLY 144 BPM`（有唱段就寫 `rap verse, then a short 4-line SUNG melodic hook, then back to rap`）。
+2. 曲風＋招牌樂器（每場不同）：英國巴洛克 boom-bap＋大鍵琴、德國巴洛克 trap＋管風琴、G-funk＋里拉琴、爵士 boom-bap＋古琴洞簫、銅管進行曲 hard trap……
+3. 前奏與收尾：A＝4 小節樂器前奏、`the beat STOPS DEAD on one huge hit (hard stop, no outro)`；B＝4 小節 DJ 刷碟前奏、`the LAST SIX LINES are a furious knockout climax … crowd roars 'OHHH' … rides out 4 bars with scratches`。
+4. 聲音：`ONE SOLO MALE RAPPER only: a DEEP, RASPY baritone …` vs `a BRIGHT, SHARP young TENOR …`——**兩人一定要一低一高、個性不同**。
+5. 咬字：`crystal-clear Mandarin rap with Taiwanese diction, every number clear`。
+6. negative：`slow ballad, mumble rap, autotune-heavy, female voice, choir, second rapper, duet, featuring, melisma, vocal runs, Indian scale`。
+
+Suno 不吃藝人名字，要寫成特徵。範例見 `pipeline/template_battle/battle.json` 的 `suno_style`。
+
+### 兩人聲音太像
+
+- 兩人的聲音描述拉開（低沉沙啞 vs 明亮尖銳），兩首都生完用聲紋比對（CAM++，越低越像兩個人；0.7 左右可以接受）。
+- 還是太像：Suno 的 persona（用某一版的聲音當角色）鎖住其中一人的聲音再生。
+
+## YuE2（沒有 Suno 時）
+
+照 `templates/song_yue2_v14/README.md`：
+```
+make_battle.py songtext                      → out/songtext/yue_A_lyrics.txt、yue_A_style.txt
+python tools/yue_song.py battle_A A --style out/songtext/yue_A_style.txt --lyrics out/songtext/yue_A_lyrics.txt --out work/song_A --seeds 1,2,3,4,5,6,7,8,9,10,11,12
+<Voice venv>/python tools/pick_song.py work/song_A out/songtext/yue_A_lyrics.txt
+```
+- 每首抽 10–12 個 seed，只留 143.6 BPM 的（約一半會跑掉），再照逐句聽寫排序，**人聽過再選**。
+- YuE2 沒有器樂前奏、刷碟不一定有：A 停在拍上→B 的接法照樣能用，但前奏很短時 DJ 口白會把音樂往後推（範本自動處理）。
+
+## 檢查（`make_battle.py songs` 自動做）
+
+- BS-RoFormer 分人聲 → 歌詞強制對齊 → **逐句**聽寫、BPM、最後一個字唱完的時間。
+- **不要整首直接聽寫**：rap 會讓聽寫幻覺出「中文字幕志願者」之類的字，連好的歌都量成 0。
+- rap 的逐句聽寫天生偏低：人工確認全對的 Suno 歌也只有 0.63–0.80。看低分句（< 0.5）是唱錯還是只是聽寫不準，**最後一定要人聽**。
+- 對齊出來的段數跟歌詞句數不同＝歌詞跟送去生歌的不一樣，先修。
+- 最後一個字的時間不對（Suno 自己在後面加喊聲）→ `rappers.<A|B>.last_word_end` 填秒數。
+
+## 兩首怎麼接（`make_battle.py audio` 自動做）
+
+1. A 整首：前奏改用伴奏分軌（拿掉 Suno 前奏裡含糊的喊話，免得跟 DJ 開場口白打架）。
+2. A 最後一個字唱完後的**第一拍重拍收**：留 0.25 秒原音＋0.6 秒短衰減，**不淡出**。
+3. **正好 1 小節後** B 那首的第一拍進來（B 自帶 DJ 刷碟前奏，換場口白壓在上面）。
+4. B 最後一個字後換伴奏分軌（Suno 常自己再唱），走到「最後一句的小節線＋8 小節」，最後 2 小節淡出。
+5. DJ：開場口白在 1 秒開始（塞不下就整段音樂往後延）、換場口白在 B 開口前 1.2 秒講完、定論口白在 B 唱完 3.2 秒後、片尾口白在音樂結束後；口白期間音樂壓 −5 dB。
+6. 兩人饒舌段調成一樣大聲；兩首 BPM 不同時 A→B 會接不準，盡量同 BPM（前四場三場 144、一場 94）。
+
+Suno 的 extend 生的「自然尾奏」接起來不好，不要用；需要收尾就寫進 B 歌詞的 `[Outro]`。

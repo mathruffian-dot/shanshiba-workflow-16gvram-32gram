@@ -1,0 +1,1541 @@
+{
+ "title": "微積分之戰",
+ "repo_dir": "../..",
+ "image_backend": "qwen",
+ "seed0": 8300,
+ "rappers": {
+  "A": {
+   "name": "牛頓",
+   "short": "牛頓",
+   "team": "金方",
+   "tagline": "英國・萬有引力・流數法",
+   "color": [
+    255,
+    158,
+    40
+   ],
+   "glow": [
+    255,
+    206,
+    120
+   ],
+   "look": "Isaac Newton at about forty-five: a real handsome brooding face with a strong jaw and light stubble, intense grey-green eyes, long natural shoulder-length wavy greying-brown hair (no wig), a deep crimson velvet coat with gold buttons, a dark waistcoat and a white linen neckcloth",
+   "desc": "Isaac Newton, a handsome brooding forty-five-year-old English scientist with long natural shoulder-length wavy greying-brown hair and light stubble, a deep crimson velvet coat with gold buttons, a dark waistcoat and a white linen neckcloth",
+   "song": "song/A.mp3",
+   "bpm": 144,
+   "suno_title": "微積分之戰_牛頓",
+   "suno_style": "ONE CONTINUOUS RAP VERSE from start to finish: no chorus, no hook, no repeated lines, no instrumental break in the middle; EXACTLY 144 BPM (half-time 72 BPM feel); DARK BRITISH BAROQUE BOOM-BAP battle rap: a 4-bar intro of dark HARPSICHORD and church organ with vinyl crackle, then hard-hitting boom-bap drums with heavy 808 bass, DJ SCRATCHING and vinyl record scratches between lines, orchestral string stabs and timpani hits; the LAST FOUR LINES build up, louder and angrier; after the last line the beat STOPS DEAD on one huge orchestral hit + 808 on the downbeat (hard stop, no fade-out, no outro); ONE SOLO MALE RAPPER only: a DEEP, RASPY, GRAVELLY older baritone with a heavy, menacing, arrogant, aggressive flow, every word punched hard and clear, crystal-clear Mandarin rap with Taiwanese diction, every Chinese number rapped clearly and separately",
+   "suno_negative": "singing ballad, slow, sleepy, lo-fi, sad, mumble rap, autotune-heavy, female voice, children's voice, choir, rock, metal, edm drop, k-pop, muddy mix, second rapper, duet, featuring, choir vocals",
+   "vocal_gender": "m",
+   "yue_style": "Chinese, rap, hip hop, boom bap battle rap, DJ scratching, vinyl record scratches, turntablism, aggressive rapid-fire rap flow, staccato punchy delivery, male rapper, deep raspy shouting voice, hard-hitting drums, heavy 808 bass, dark harpsichord sample, orchestral stabs, hype, intense, 144 BPM",
+   "lyrics": [
+    {
+     "sec": "Intro: dark harpsichord and church organ with vinyl crackle, DJ scratches, 4 bars, no vocals",
+     "lines": []
+    },
+    {
+     "sec": "Verse",
+     "lines": [
+      {
+       "sing": "一六六五 瘟疫爆發 劍橋 關門放假",
+       "show": "1665 瘟疫爆發　劍橋關門放假",
+       "rhyme": "放假"
+      },
+      {
+       "sing": "我回鄉下 蘋果砸下 整個宇宙 收進我 掌下",
+       "show": "我回鄉下　蘋果砸下　整個宇宙收進我掌下",
+       "rhyme": "掌下"
+      },
+      {
+       "sing": "流數法 我先發明 我想通了 萬有引力",
+       "show": "流數法我先發明　我想通了萬有引力",
+       "rhyme": "引力"
+      },
+      {
+       "sing": "你這德國來的 二手貨 根本 沒有實力",
+       "show": "你這德國來的二手貨　根本沒有實力",
+       "rhyme": "實力"
+      },
+      {
+       "sing": "一六八七 我出版原理 三大定律 寫在 第一",
+       "show": "1687 我出版《原理》　三大定律寫在第一",
+       "rhyme": "一"
+      },
+      {
+       "sing": "物理課本 翻開 第一頁 誰的名字 印在 那裡",
+       "show": "物理課本翻開第一頁　誰的名字印在那裡",
+       "rhyme": "裡"
+      },
+      {
+       "sing": "皇家學會 會長是我 英國科學 我當家",
+       "show": "皇家學會會長是我　英國科學我當家",
+       "rhyme": "家"
+      },
+      {
+       "sing": "你一個 外交官 寫寫信 也敢 跟我 拚身價",
+       "show": "你一個外交官寫寫信　也敢跟我拚身價",
+       "rhyme": "價"
+      },
+      {
+       "sing": "微積分 我早寫好 十年 鎖在 抽屜",
+       "show": "微積分我早寫好　10 年鎖在抽屜",
+       "rhyme": "抽屜"
+      },
+      {
+       "sing": "你跑來 倫敦 偷看一眼 回去 就敢 抄襲",
+       "show": "你跑來倫敦偷看一眼　回去就敢抄襲",
+       "rhyme": "抄襲"
+      },
+      {
+       "sing": "我把方法 寫成密碼 就是要防 你這種 小偷",
+       "show": "我把方法寫成密碼　就是要防你這種小偷",
+       "rhyme": "偷"
+      },
+      {
+       "sing": "結果你 換個符號 假裝 自己 起頭",
+       "show": "結果你換個符號　假裝自己起頭",
+       "rhyme": "頭"
+      }
+     ]
+    },
+    {
+     "sec": "Final Build: drums double, rapper shouts harder and harder",
+     "lines": [
+      {
+       "sing": "你的 D X 花拳繡腿 符號 做得 漂亮",
+       "show": "你的 dx 花拳繡腿　符號做得漂亮",
+       "rhyme": "漂亮"
+      },
+      {
+       "sing": "我的流數 真材實料 算出 潮汐 和 月亮",
+       "show": "我的流數真材實料　算出潮汐和月亮",
+       "rhyme": "月亮"
+      },
+      {
+       "sing": "站在巨人 肩上的人 是我 你只配 站我 腳邊",
+       "show": "站在巨人肩上的人是我　你只配站我腳邊",
+       "rhyme": "邊"
+      },
+      {
+       "sing": "麥克風 給你 德國的 抄襲犯 讓全場 看你 丟臉",
+       "show": "麥克風給你　德國的抄襲犯　讓全場看你丟臉",
+       "rhyme": "丟臉"
+      }
+     ]
+    },
+    {
+     "sec": "Hard stop: one huge orchestral hit and 808 on the downbeat, then silence",
+     "lines": []
+    }
+   ],
+   "intro_card": [
+    [
+     "牛頓",
+     120
+    ],
+    [
+     "英國 萬有引力 流數法",
+     54
+    ],
+    [
+     "皇家學會會長",
+     42
+    ]
+   ],
+   "person": "man",
+   "pronoun": "he"
+  },
+  "B": {
+   "name": "萊布尼茲",
+   "short": "萊布尼茲",
+   "team": "綠方",
+   "tagline": "德國・微積分符號 dx",
+   "color": [
+    40,
+    214,
+    160
+   ],
+   "glow": [
+    150,
+    245,
+    210
+   ],
+   "look": "Gottfried Leibniz at about forty: a real handsome clean-shaven face with warm mischievous brown eyes, a HUGE dark-brown curly full-bottomed periwig past his shoulders, a royal-blue brocade coat with silver embroidery, a white lace cravat and lace cuffs",
+   "desc": "Gottfried Leibniz, a handsome lively forty-year-old German scholar in a huge dark-brown curly full-bottomed periwig, a royal-blue brocade coat with silver embroidery, a white lace cravat and lace cuffs",
+   "song": "song/B.mp3",
+   "bpm": 144,
+   "suno_title": "微積分之戰_萊布尼茲",
+   "suno_style": "ONE CONTINUOUS RAP VERSE from start to finish: no chorus, no hook, no repeated lines, no instrumental break in the middle; EXACTLY 144 BPM (half-time 72 BPM feel); GERMAN BAROQUE TRAP battle rap: opens with a 4-bar DJ INTRO of turntable scratches and a record rewind, then a fast minor-key PIPE ORGAN riff and glitchy digital binary bleeps drop in; sliding 808 bass, sharp rolling hi-hats, hard snares, DJ scratches between lines; the LAST SIX LINES are a furious knockout climax: the drums double, the rapper gets louder line by line and SHOUTS the final lines, the crowd roars 'OHHH', then the beat rides out 4 bars with scratches; ONE SOLO MALE RAPPER only: a BRIGHT, SHARP, slightly nasal younger TENOR with a fast, precise, rapid-fire, savage flow that stays clear, crystal-clear Mandarin rap with Taiwanese diction, every Chinese number rapped clearly and separately",
+   "suno_negative": "singing ballad, slow, sleepy, lo-fi, sad, mumble rap, autotune-heavy, female voice, children's voice, choir, rock, metal, edm drop, k-pop, muddy mix, second rapper, duet, featuring, choir vocals",
+   "vocal_gender": "m",
+   "yue_style": "Chinese, rap, hip hop, trap battle rap, DJ scratching, vinyl record scratches, turntablism, aggressive rapid-fire rap flow, staccato punchy delivery, male rapper, bright sharp nasal voice, hard-hitting drums, sliding 808 bass, baroque pipe organ sample, glitchy digital bleeps, hype, intense, 144 BPM",
+   "lyrics": [
+    {
+     "sec": "Intro: DJ turntable scratches and record rewind, then pipe organ riff enters, 4 bars, no vocals",
+     "lines": []
+    },
+    {
+     "sec": "Verse",
+     "lines": [
+      {
+       "sing": "巨人肩膀上 你根本 只會 踩人",
+       "show": "巨人肩膀上　你根本只會踩人",
+       "rhyme": "踩人"
+      },
+      {
+       "sing": "方法鎖在 抽屜十年 誰認得 你這個 怪人",
+       "show": "方法鎖在抽屜 10 年　誰認得你這個怪人",
+       "rhyme": "怪人"
+      },
+      {
+       "sing": "一六八四 我先登報 全歐洲 都在 讀我",
+       "show": "1684 我先登報　全歐洲都在讀我",
+       "rhyme": "我"
+      },
+      {
+       "sing": "你的流數 拖到 一七零四 才敢出書 還要 怪我",
+       "show": "你的流數拖到 1704 才敢出書　還要怪我",
+       "rhyme": "我"
+      },
+      {
+       "sing": "微分 D X 積分 長S 課本每頁 都是 我寫的",
+       "show": "微分 dx　積分長 S　課本每頁都是我寫的",
+       "rhyme": "的"
+      },
+      {
+       "sing": "你的小點點 英國死守 一百年 數學落後 全是 你害的",
+       "show": "你的小點點英國死守 100 年　數學落後全是你害的",
+       "rhyme": "的"
+      },
+      {
+       "sing": "一七一二 皇家學會 判我抄襲 報告寫得 好威風",
+       "show": "1712 皇家學會判我抄襲　報告寫得好威風",
+       "rhyme": "風"
+      },
+      {
+       "sing": "執筆的 是你自己 球員兼裁判 你玩得 好輕鬆",
+       "show": "執筆的是你自己　球員兼裁判你玩得好輕鬆",
+       "rhyme": "鬆"
+      },
+      {
+       "sing": "蘋果 砸到頭 你才 開竅",
+       "show": "蘋果砸到頭你才開竅",
+       "rhyme": "開竅"
+      },
+      {
+       "sing": "我一個零 一個一 整個電腦時代 被我 改造",
+       "show": "我一個 0 一個 1　整個電腦時代被我改造",
+       "rhyme": "改造"
+      },
+      {
+       "sing": "算得出 行星怎麼繞 算不出 股票 怎麼跌",
+       "show": "算得出行星怎麼繞　算不出股票怎麼跌",
+       "rhyme": "跌"
+      },
+      {
+       "sing": "南海泡沫 賠到破產 大科學家 被割到 流血",
+       "show": "南海泡沫賠到破產　大科學家被割到流血",
+       "rhyme": "血"
+      },
+      {
+       "sing": "半夜不睡 煉金術 想把鉛 變成 黃金",
+       "show": "半夜不睡煉金術　想把鉛變成黃金",
+       "rhyme": "黃金"
+      },
+      {
+       "sing": "你的腦袋 比鉛還重 我看先煉 你的 良心",
+       "show": "你的腦袋比鉛還重　我看先煉你的良心",
+       "rhyme": "良心"
+      }
+     ]
+    },
+    {
+     "sec": "Final Build: drums double, rapper shouts harder and harder",
+     "lines": [
+      {
+       "sing": "你說我抄 全世界 用我的符號 在考試",
+       "show": "你說我抄？全世界用我的符號在考試",
+       "rhyme": "試"
+      },
+      {
+       "sing": "你的點點 被擦掉 連英國 都改用 我的方式",
+       "show": "你的點點被擦掉　連英國都改用我的方式",
+       "rhyme": "式"
+      },
+      {
+       "sing": "D X 一刀 把你的流數 切成 碎片",
+       "show": "dx 一刀　把你的流數切成碎片",
+       "rhyme": "片"
+      },
+      {
+       "sing": "積分 一條S 把你的名聲 全部 收編",
+       "show": "積分一條 S　把你的名聲全部收編",
+       "rhyme": "編"
+      },
+      {
+       "sing": "站在巨人肩上 今晚巨人 換我當",
+       "show": "站在巨人肩上　今晚巨人換我當",
+       "rhyme": "當"
+      },
+      {
+       "sing": "萊布尼茲 封王 一條積分 把你 全部埋葬",
+       "show": "萊布尼茲封王　一條積分把你全部埋葬",
+       "rhyme": "埋葬"
+      }
+     ]
+    },
+    {
+     "sec": "Crowd: OHHH",
+     "lines": []
+    },
+    {
+     "sec": "Outro: the beat rides out 4 bars with DJ scratches, no vocals",
+     "lines": []
+    }
+   ],
+   "intro_card": [
+    [
+     "萊布尼茲",
+     120
+    ],
+    [
+     "德國 微積分符號發明人",
+     54
+    ],
+    [
+     "外交官 哲學家",
+     42
+    ]
+   ],
+   "person": "man",
+   "pronoun": "he"
+  }
+ },
+ "dj": {
+  "name": "夏特萊侯爵夫人",
+  "short": "DJ 夏特萊",
+  "color": [
+   236,
+   226,
+   200
+  ],
+  "glow": [
+   255,
+   244,
+   220
+  ],
+  "pronoun": "she",
+  "look": "Emilie du Chatelet at about thirty-five as a hip-hop battle DJ: a real face with lively dark eyes and strong eyebrows, softly powdered light-grey hair pinned up with small curls, a HIGH-NECKED pale-gold silk 18th-century gown whose bodice is completely covered by white lace from the waist up to a high lace collar at the throat (no cleavage, no bare chest, no low neckline), a pearl necklace over the lace, and modern black over-ear DJ headphones",
+  "desc": "Émilie du Châtelet, a lively thirty-five-year-old French woman scientist with softly powdered light-grey pinned-up hair, a pale-gold silk 18th-century gown with lace, a pearl necklace and modern black DJ headphones",
+  "voice_design": "一位三十多歲的女性擔任嘻哈擂台主持人，聲音明亮有力、自信俐落，帶點優雅和幽默，熱情激昂，音量大，語速中等偏快，台灣口音。",
+  "voice_sample": "數學史大擂台！微積分之戰！到底是誰先發明微積分？今晚見真章！準備好了嗎？",
+  "lines": {
+   "open": "數學史大擂台！微積分之戰！英國的牛頓，對上，德國的萊布尼茲！到底誰先發明微積分？開打！",
+   "switch": "被說是小偷？萊布尼茲，反擊的時間到了！上台！",
+   "verdict": "兩個天才吵了一輩子。其實，他們都是自己想出微積分的！",
+   "end": "誰贏了？下一場是誰？你決定！"
+  },
+  "end_beats": [
+   "誰贏了？",
+   "下一場是誰？",
+   "你決定！"
+  ],
+  "intro_card": [
+   [
+    "夏特萊侯爵夫人",
+    104
+   ],
+   [
+    "法文版原理譯者",
+    54
+   ],
+   [
+    "擂台 DJ",
+    42
+   ]
+  ],
+  "person": "woman"
+ },
+ "arena": {
+  "master": "Horizontal 16:9 cinematic film still, photorealistic, a lavish big-budget rap-battle music video. An EMPTY night arena: a round raised stage in the centre with a plain glowing GOLD RING inlaid in its dark floor; the LEFT half of the background is a 17th-century ENGLISH scholar's library - dark oak bookshelves, a big brass reflecting telescope on a tripod, a brass orrery, an apple-tree branch with red apples, a rainbow band of light thrown by a glass prism - lit in warm AMBER and honey-GOLD candlelight; the RIGHT half is a GERMAN BAROQUE palace library - white-and-gold rococo wall panels, tall windows, a big brass gear-and-crank mechanical calculating machine on a table, organ pipes - lit in cool EMERALD-GREEN and TEAL moonlight; at the back centre a raised DJ booth with two turntables between the two halves; haze, volumetric beams; rows of empty audience seats in the dark foreground. On the stage stand TWO modern polished chrome vintage stand microphones facing each other, one on the amber left side and one on the emerald right side. No people. No signboards, no written letters or numbers anywhere, no flags, no banners, no coats of arms, no star or emblem on the floor, no watermark, no logo.",
+  "keep": "The place is exactly the night rap-battle arena of {ref}: round raised stage with a glowing gold ring on the floor, the LEFT half a 17th-century English scholar's library in warm AMBER-GOLD candlelight, the RIGHT half a German baroque palace library in cool EMERALD-TEAL moonlight, haze.",
+  "light": "night arena, warm amber-gold candlelight on the left side and cool emerald-teal moonlight on the right side, haze and beams",
+  "setting": "a night rap-battle arena: a 17th-century English scholar's library in warm amber-gold candlelight on the left, a German baroque palace library in emerald-teal light on the right, a round stage with a glowing gold ring and a DJ booth",
+  "style": "a big-budget rap-battle music video between two historical scientists, photorealistic live action, cinematic anamorphic look, deep night darkness with saturated warm amber-gold candlelight on the left and cool emerald-teal moonlight on the right, haze and light beams, high-energy performance",
+  "keep_h3": "The background stays exactly the arena of <Picture 1> for the whole shot: English library on the left, German baroque library on the right; no modern city, no flags, no banners, no extra performers."
+ },
+ "places": {
+  "plague": {
+   "light": "soft English countryside daylight in 1665",
+   "setting": "an English country orchard beside a stone farmhouse in 1665",
+   "era": "period"
+  },
+  "printing": {
+   "light": "warm candle and window light in a 17th-century London print shop",
+   "setting": "a 17th-century London print shop",
+   "era": "period",
+   "text": true
+  },
+  "royal": {
+   "light": "dim warm candlelight in an 18th-century London meeting hall",
+   "setting": "a candlelit meeting hall of the Royal Society in London",
+   "era": "period"
+  },
+  "london": {
+   "light": "grey London window light in 1676",
+   "setting": "a grey-lit room in London in 1676",
+   "era": "period"
+  },
+  "letter": {
+   "light": "a single candle at night in a 17th-century study",
+   "setting": "a candlelit 17th-century study at night",
+   "era": "period",
+   "text": true
+  },
+  "leipzig": {
+   "light": "warm daylight in a 17th-century Leipzig print shop",
+   "setting": "a 17th-century print shop in Leipzig",
+   "era": "period",
+   "text": true
+  },
+  "classroom": {
+   "light": "daylight in a modern Taiwanese high-school classroom",
+   "setting": "a modern Taiwanese high-school classroom",
+   "era": "modern",
+   "text": true
+  },
+  "cambridge": {
+   "light": "dusty daylight in an old Cambridge lecture room around 1800",
+   "setting": "an old Cambridge lecture room around 1800",
+   "era": "period",
+   "text": true
+  },
+  "report": {
+   "light": "a single candle at night in a London study",
+   "setting": "a candlelit London study at night in 1712",
+   "era": "period",
+   "text": true
+  },
+  "binary": {
+   "light": "cool screen light in a modern dark computer room",
+   "setting": "a modern dark computer room",
+   "era": "modern",
+   "text": true
+  },
+  "bubble": {
+   "light": "chaotic grey daylight in a crowded 1720 London street",
+   "setting": "a crowded London street of stock brokers in 1720",
+   "era": "period"
+  },
+  "alchemy": {
+   "light": "orange furnace glow at night in a 17th-century alchemy laboratory",
+   "setting": "a 17th-century alchemy laboratory at night",
+   "era": "period"
+  },
+  "exam": {
+   "light": "flat fluorescent light in a modern Taiwanese exam hall",
+   "setting": "a modern Taiwanese exam hall",
+   "era": "modern",
+   "text": true
+  }
+ },
+ "style_modern": "a realistic present-day Taiwanese school insert shot, photorealistic live action, cinematic look, natural light, calm and believable",
+ "style_period": "a period-film flashback in 17th- and 18th-century Europe, photorealistic live action, cinematic look, natural period light",
+ "film_look": "Cinematic film still from a big-budget rap-battle music video about the history of mathematics, photorealistic, anamorphic lens, shallow depth of field",
+ "no_text": "Apart from any blackboard, paper or screen text explicitly described above, no captions, no written letters, numbers or symbols anywhere (books, papers and scrolls show only blurred marks); no flags, no banners, no coats of arms, no watermark, no logo; the stage floor has only a plain gold ring, no star or emblem. Real human faces, natural skin, not airbrushed, not AI-looking. ",
+ "audience": "The audience are ordinary modern Taiwanese high-school and university students (teenagers and young adults in school uniforms and hoodies), real faces. ",
+ "audience_desc": "the audience of modern Taiwanese high-school and university students",
+ "cards": {
+  "dj_note": {
+   "accent": "J",
+   "size": 46,
+   "lines": [
+    [
+     "DJ｜夏特萊侯爵夫人",
+     "ink"
+    ],
+    [
+     "法國數學家，把牛頓的《原理》翻成法文",
+     "J"
+    ],
+    [
+     "物理挺牛頓、哲學挺萊布尼茲",
+     "ink"
+    ]
+   ]
+  },
+  "plague": {
+   "accent": "A",
+   "size": 46,
+   "lines": [
+    [
+     "1665・倫敦大瘟疫",
+     "ink"
+    ],
+    [
+     "劍橋大學停課，牛頓回鄉下老家",
+     "A"
+    ],
+    [
+     "兩年內想出微積分、萬有引力",
+     "J"
+    ]
+   ]
+  },
+  "principia": {
+   "accent": "A",
+   "size": 46,
+   "lines": [
+    [
+     "1687・《自然哲學的數學原理》",
+     "ink"
+    ],
+    [
+     "三大運動定律＋萬有引力",
+     "A"
+    ]
+   ]
+  },
+  "royal": {
+   "accent": "A",
+   "size": 46,
+   "lines": [
+    [
+     "英國皇家學會",
+     "ink"
+    ],
+    [
+     "牛頓 1703 年起當會長，一當 24 年",
+     "A"
+    ]
+   ]
+  },
+  "london": {
+   "accent": "A",
+   "size": 46,
+   "lines": [
+    [
+     "1676・萊布尼茲到倫敦",
+     "ink"
+    ],
+    [
+     "看過牛頓朋友手上的部分手稿",
+     "A"
+    ]
+   ]
+  },
+  "anagram": {
+   "accent": "A",
+   "size": 46,
+   "lines": [
+    [
+     "1677・牛頓回信給萊布尼茲",
+     "ink"
+    ],
+    [
+     "把關鍵方法寫成字母謎題，不讓人看懂",
+     "A"
+    ]
+   ]
+  },
+  "acta": {
+   "accent": "B",
+   "size": 46,
+   "lines": [
+    [
+     "1684・萊布尼茲先發表微分論文",
+     "ink"
+    ],
+    [
+     "牛頓的流數法到 1704 年才正式出版",
+     "B"
+    ]
+   ]
+  },
+  "notation": {
+   "accent": "B",
+   "size": 46,
+   "lines": [
+    [
+     "今天課本用的符號都是萊布尼茲的",
+     "ink"
+    ],
+    [
+     "dx＝微分　∫＝積分（拉長的 S，總和）",
+     "B"
+    ]
+   ]
+  },
+  "dots": {
+   "accent": "B",
+   "size": 46,
+   "lines": [
+    [
+     "牛頓的「點點」符號：字母頭上加一點",
+     "ink"
+    ],
+    [
+     "英國死守 100 多年，數學落後歐陸",
+     "B"
+    ]
+   ]
+  },
+  "report": {
+   "accent": "B",
+   "size": 44,
+   "lines": [
+    [
+     "1712・皇家學會調查「誰先發明」",
+     "ink"
+    ],
+    [
+     "判萊布尼茲抄襲，報告其實是會長牛頓寫的",
+     "B"
+    ]
+   ]
+  },
+  "binary": {
+   "accent": "B",
+   "size": 46,
+   "lines": [
+    [
+     "1703・萊布尼茲發表二進位",
+     "ink"
+    ],
+    [
+     "只用 0 和 1 ＝今天電腦的語言",
+     "B"
+    ]
+   ]
+  },
+  "bubble": {
+   "accent": "B",
+   "size": 46,
+   "lines": [
+    [
+     "1720・南海泡沫",
+     "ink"
+    ],
+    [
+     "股票崩盤，牛頓賠了約 2 萬英鎊",
+     "B"
+    ]
+   ]
+  },
+  "alchemy": {
+   "accent": "B",
+   "size": 46,
+   "lines": [
+    [
+     "牛頓也研究煉金術",
+     "ink"
+    ],
+    [
+     "留下上百萬字的煉金筆記",
+     "B"
+    ]
+   ]
+  },
+  "verdict": {
+   "accent": "J",
+   "size": 48,
+   "lines": [
+    [
+     "今天的定論",
+     "ink"
+    ],
+    [
+     "牛頓、萊布尼茲各自獨立發明了微積分",
+     "J"
+    ]
+   ]
+  }
+ },
+ "vote": {
+  "A": "挺牛頓打「蘋果」",
+  "B": "挺萊布尼茲打「dx」"
+ },
+ "show_replace": [
+  [
+   "一六六五",
+   "1665"
+  ],
+  [
+   "一六八七",
+   "1687"
+  ],
+  [
+   "一六八四",
+   "1684"
+  ],
+  [
+   "一七零四",
+   "1704"
+  ],
+  [
+   "一七一二",
+   "1712"
+  ],
+  [
+   "一百年",
+   "100 年"
+  ],
+  [
+   "十年",
+   "10 年"
+  ],
+  [
+   "D X",
+   "dx"
+  ],
+  [
+   "一個零 一個一",
+   "一個 0 一個 1"
+  ]
+ ],
+ "flash_scenes": [
+  "plague",
+  "report"
+ ],
+ "locked": [
+  "D01",
+  "D02",
+  "D03",
+  "F03",
+  "F12",
+  "T01",
+  "T02",
+  "T03",
+  "T04",
+  "V01",
+  "W01"
+ ],
+ "crowd_sfx": "sfx/歡呼",
+ "shots": [
+  {
+   "id": "W01",
+   "at": 0.0,
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "T"
+   ],
+   "dist": "WIDE",
+   "frame": "Wide establishing shot from behind the audience: an epic night rap-battle arena - a round raised stage in the centre with a glowing gold ring on its floor, the LEFT half a 17th-century English scholar's library (oak shelves, a brass telescope, an apple-tree branch) in warm AMBER-GOLD candlelight, the RIGHT half a German baroque palace library (white-and-gold panels, organ pipes, a brass calculating machine) in cool EMERALD-TEAL light, a DJ booth at the back centre; the student audience in the foreground stand up with hands raised.",
+   "action": "Starting from <Picture 1>, the students jump to their feet and cheer with both hands up, light beams sweep across the arena from amber to emerald, and haze rolls over the stage.",
+   "gfx": [
+    "title"
+   ]
+  },
+  {
+   "id": "K01",
+   "at": [
+    "mark",
+    "a_first",
+    -16.76
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "K"
+   ],
+   "dist": "MCU",
+   "frame": "Émilie du Châtelet stands behind her DJ booth at the back centre of the arena stage, black headphones on one ear, one hand on a spinning vinyl record, the other hand raised to the crowd, smiling confidently; amber light on the left, emerald light on the right.",
+   "action": "Starting from <Picture 1>, she announces the battle to the crowd with a big confident smile, scratches the record back and forth on the beat, then throws her free arm up toward the crowd.",
+   "card": "K",
+   "voice": "dj"
+  },
+  {
+   "id": "N00",
+   "at": [
+    "mark",
+    "a_first",
+    -12.36
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "MS",
+   "frame": "Isaac Newton stands at the chrome microphone on the amber-gold left side of the stage, not touching it yet, holding a small glass prism up to the light in one hand, a cold proud stare toward the right, mouth closed.",
+   "action": "Starting from <Picture 1>, he turns the prism slowly so a thin rainbow of light sweeps across his coat, then lowers it and steps up to the microphone, mouth closed."
+  },
+  {
+   "id": "L00",
+   "at": [
+    "mark",
+    "a_first",
+    -8.76
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "MS",
+   "frame": "Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage, not touching it yet, twirling a long white quill pen between his fingers, a cocky grin toward the left, mouth closed.",
+   "action": "Starting from <Picture 1>, he twirls the quill pen in a full circle between his fingers, blows on its tip like a gunslinger, and tucks it into his coat with a grin, mouth closed."
+  },
+  {
+   "id": "V01",
+   "at": [
+    "mark",
+    "a_first",
+    -5.16
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "A",
+    "B"
+   ],
+   "dist": "MS",
+   "still": true,
+   "frame": "Face-off on the round stage: Isaac Newton on the LEFT in amber-gold light and Gottfried Leibniz on the RIGHT in emerald-teal light stand at their chrome microphones facing each other in profile across the glowing gold ring; Newton glares coldly, Leibniz answers with a cocky grin; both mouths closed.",
+   "action": "",
+   "gfx": [
+    "vs"
+   ]
+  },
+  {
+   "id": "N01",
+   "at": [
+    "A",
+    0
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "MCU",
+   "frame": "Isaac Newton stands at the chrome microphone on the amber-gold left side of the stage, gripping the microphone stand with one hand, chin raised, a cold proud stare, about to rap.",
+   "action": "Starting from <Picture 1>, he raps hard, jabs a finger downward on the beat, then spreads his hand like doors swinging shut.",
+   "card": "A"
+  },
+  {
+   "id": "F01",
+   "at": [
+    "A",
+    1
+   ],
+   "kind": "silent",
+   "scene": "plague",
+   "subj": [
+    "A"
+   ],
+   "dist": "MS",
+   "frame": "Flashback, 1665: young Isaac Newton in a plain dark coat sits on the grass under an apple tree in an English country orchard beside a stone farmhouse, a notebook on his knee, looking up; a red apple hangs just above his head.",
+   "action": "Starting from <Picture 1>, the red apple drops from the branch and bounces off the grass beside him; Newton snaps his head toward it, eyes wide, and begins scribbling in his notebook.",
+   "gfx": [
+    "plague"
+   ]
+  },
+  {
+   "id": "N02",
+   "at": [
+    "A",
+    2
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "CU",
+   "frame": "Close-up: Isaac Newton stands at the chrome microphone on the amber-gold left side of the stage, one finger raised to his temple, a smug genius look, amber rim light.",
+   "action": "Starting from <Picture 1>, he raps, taps his temple twice on the beat, then points straight up at the sky."
+  },
+  {
+   "id": "R01",
+   "at": [
+    "A",
+    3
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "MCU",
+   "frame": "Reaction shot: Gottfried Leibniz on the emerald-teal right side leans on his chrome microphone stand with his arms crossed, listening with an amused, disdainful little smile, one eyebrow raised.",
+   "action": "Starting from <Picture 1>, he slowly shakes his head with an amused smile, flicks a curl of his huge wig over his shoulder and raises his eyebrow even higher; his mouth stays closed in a smug, disdainful little smile the whole time; he never speaks."
+  },
+  {
+   "id": "F02",
+   "at": [
+    "A",
+    4
+   ],
+   "kind": "silent",
+   "scene": "printing",
+   "subj": [],
+   "dist": "MS",
+   "frame": "Flashback, 1687, a London print shop: a freshly printed book title page lies on a wooden printing press, the page clearly printed with \"PHILOSOPHIÆ NATURALIS PRINCIPIA MATHEMATICA\" and below it \"Autore IS. NEWTON\", stacks of printed sheets drying on lines overhead.",
+   "action": "Starting from <Picture 1>, a printer's hands pull the press lever and lift another freshly printed title page, and the camera pushes in slowly on the page.",
+   "gfx": [
+    "principia"
+   ]
+  },
+  {
+   "id": "N03",
+   "at": [
+    "A",
+    5
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "MS",
+   "frame": "Isaac Newton stands at the chrome microphone on the amber-gold left side of the stage, one arm stretched toward the audience, a proud superior smirk, amber and gold light behind him.",
+   "action": "Starting from <Picture 1>, he raps, sweeps his outstretched arm across the crowd, then taps his chest twice with his fist."
+  },
+  {
+   "id": "F03",
+   "at": [
+    "A",
+    6
+   ],
+   "kind": "silent",
+   "scene": "royal",
+   "subj": [
+    "A"
+   ],
+   "dist": "WIDE",
+   "frame": "Flashback, the Royal Society in London in the early 1700s: older Isaac Newton in a long white wig and a dark robe sits in a tall carved president's chair at the head of a long candlelit table, gentlemen in wigs seated along both sides turning toward him.",
+   "action": "Starting from <Picture 1>, Newton raises one hand and the gentlemen fall silent and bow their heads; he leans back in the chair with a satisfied look.",
+   "gfx": [
+    "royal"
+   ]
+  },
+  {
+   "id": "N04",
+   "at": [
+    "A",
+    7
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "CU",
+   "frame": "Close-up: Isaac Newton stands at the chrome microphone on the amber-gold left side of the stage, mockingly miming writing a letter in the air with a fussy little pinch of his fingers, a sarcastic sneer, amber rim light.",
+   "action": "Starting from <Picture 1>, he raps, mimes scribbling a letter in the air with an exaggerated flourish, then flicks the imaginary letter away with contempt.",
+   "last_first": true,
+   "seed_bump": 1000
+  },
+  {
+   "id": "F04",
+   "at": [
+    "A",
+    8
+   ],
+   "kind": "silent",
+   "scene": "letter",
+   "subj": [
+    "A"
+   ],
+   "dist": "MCU",
+   "frame": "Flashback, night: young Isaac Newton in a dark study stuffs a thick bundle of handwritten manuscript pages into a wooden desk drawer, a single candle burning on the desk.",
+   "action": "Starting from <Picture 1>, he pushes the drawer shut, turns a small iron key in its lock, and pockets the key with a suspicious glance over his shoulder."
+  },
+  {
+   "id": "F05",
+   "at": [
+    "A",
+    9
+   ],
+   "kind": "silent",
+   "scene": "london",
+   "subj": [
+    "B"
+   ],
+   "dist": "MS",
+   "frame": "Flashback, London 1676: Gottfried Leibniz in a dark travelling coat and his huge wig leans over a wooden table in a grey-lit room, reading a few loose handwritten mathematical manuscript pages with great interest.",
+   "action": "Starting from <Picture 1>, he flips a page, raises his eyebrows, glances quickly toward the door and keeps reading closely.",
+   "gfx": [
+    "london"
+   ]
+  },
+  {
+   "id": "F06",
+   "at": [
+    "A",
+    10
+   ],
+   "kind": "silent",
+   "scene": "letter",
+   "subj": [
+    "A"
+   ],
+   "dist": "MCU",
+   "frame": "Flashback, night: Isaac Newton at a candlelit desk writes a letter with a quill, the paper covered in a long jumbled string of letters and numbers like a secret code, \"6accdae13eff7i3l9n4o4qrr4s8t12ux\" clearly written on one line.",
+   "action": "Starting from <Picture 1>, he finishes the coded line, folds the letter, presses a blob of red wax on it and smirks.",
+   "gfx": [
+    "anagram"
+   ]
+  },
+  {
+   "id": "R02",
+   "at": [
+    "A",
+    11
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "CU",
+   "frame": "Reaction close-up: Gottfried Leibniz in emerald-teal light covers a silent laugh with his lace-cuffed hand, eyes sparkling with mockery, mouth closed.",
+   "action": "Starting from <Picture 1>, his shoulders shake with a silent laugh, he lowers the hand and spreads it in a small 'whatever' shrug; his mouth stays closed in a smug, disdainful little smile the whole time; he never speaks."
+  },
+  {
+   "id": "N05",
+   "at": [
+    "A",
+    12
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "MCU",
+   "frame": "Isaac Newton stands at the chrome microphone on the amber-gold left side of the stage, holding his hand up limp-wristed in a mocking dainty pose, a scornful grin, amber light.",
+   "action": "Starting from <Picture 1>, he raps, mocks a fancy flourish in the air with his fingers, then clenches his hand into a hard fist."
+  },
+  {
+   "id": "N06",
+   "at": [
+    "A",
+    13
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "MCU",
+   "frame": "Waist-up: Isaac Newton stands at the chrome microphone on the amber-gold left side of the stage, one arm raised high pointing up toward a glowing full moon projected in the haze above the stage, a proud triumphant face.",
+   "action": "Starting from <Picture 1>, he raps, sweeps his raised arm down from the moon like a wave of the tide, then punches his fist forward.",
+   "last_first": true,
+   "seed_bump": 1000
+  },
+  {
+   "id": "D01",
+   "at": [
+    "A",
+    14
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "A",
+    "B"
+   ],
+   "dist": "MCU",
+   "frame": "Waist-up side-on two-shot, the two men stand close, about one metre apart, both faces large and visible in profile: Isaac Newton on the LEFT leans toward his rival and points down at the floor by his feet; Gottfried Leibniz on the RIGHT faces him with arms crossed and a smug amused smile, mouth closed; amber light left, emerald light right.",
+   "action": "Starting from <Picture 1>, Newton raps at Leibniz and slowly points down at the floor twice; Leibniz keeps his arms firmly crossed the whole time and only smirks, his hands never move.",
+   "seed_bump": 5000,
+   "cons": [
+    "Gottfried Leibniz on the right keeps his lips pressed together in a smug smile from the first to the last frame; he never opens his mouth.",
+    "Leibniz's arms stay crossed over his chest for the whole shot; his hands never move. Newton's hands move slowly and stay sharp."
+   ],
+   "calm": true,
+   "draft": false
+  },
+  {
+   "id": "N07",
+   "at": [
+    "A",
+    15
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "CU",
+   "frame": "Close-up, darker: Isaac Newton at the microphone turns his head toward the right and looks down his nose with ice-cold grey-green eyes, amber light from below, holding the microphone out toward the right side of the frame.",
+   "action": "Starting from <Picture 1>, he raps slowly and coldly, holding the microphone still out toward the right side of the frame; his free hand stays low and still, and on the last word he slowly opens his fingers.",
+   "last_first": true,
+   "calm": true,
+   "seed_bump": 5000,
+   "draft": false,
+   "cons": [
+    "Slow, controlled movements only: both hands stay sharp and clearly shaped, no fast gestures, no motion blur."
+   ]
+  },
+  {
+   "id": "T02",
+   "at": [
+    "mark",
+    "a_stop",
+    0.3
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "T"
+   ],
+   "dist": "WIDE",
+   "frame": "Audience B-roll: modern Taiwanese students in the arena shout 'ohhh' in shock, hands on their heads, some pointing at the stage, amber light washing over them.",
+   "action": "Starting from <Picture 1>, the students jump and shout with hands on their heads, pointing at the stage."
+  },
+  {
+   "id": "K02",
+   "at": [
+    "mark",
+    "b_zero",
+    2.0
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "K"
+   ],
+   "dist": "CU",
+   "frame": "Close-up: Émilie du Châtelet at her DJ turntables, headphones on, one hand on the record, grinning with excitement, gold light.",
+   "action": "Starting from <Picture 1>, she scratches the record fast back and forth and bobs her head, mouth closed in a grin.",
+   "gfx": [
+    "dj_note"
+   ]
+  },
+  {
+   "id": "T03",
+   "at": [
+    "mark",
+    "b_zero",
+    6.4
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "T"
+   ],
+   "dist": "WIDE",
+   "frame": "Audience B-roll: rows of modern Taiwanese students in the arena wave thick calculus textbooks above their heads on the beat, some laughing, amber and emerald stage light washing over them.",
+   "action": "Starting from <Picture 1>, the students wave the textbooks on the beat, one student pretends to faint, others laugh and cheer.",
+   "last_first": true,
+   "seed_bump": 1000
+  },
+  {
+   "id": "K03",
+   "at": [
+    "mark",
+    "b_zero",
+    10.4
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "K"
+   ],
+   "dist": "MCU",
+   "still": true,
+   "frame": "Émilie du Châtelet behind her DJ booth points firmly with her brass compass toward the emerald-teal right side of the stage with a big grin, headphones around her neck, mouth closed.",
+   "action": ""
+  },
+  {
+   "id": "L10",
+   "at": [
+    "mark",
+    "b_zero",
+    15.0
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "MS",
+   "frame": "Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage, cracking his knuckles, a confident challenging grin toward the left, mouth closed.",
+   "action": "Starting from <Picture 1>, he rolls his shoulders, grips the microphone stand with one hand and lifts his chin toward his rival, mouth closed."
+  },
+  {
+   "id": "L01",
+   "at": [
+    "B",
+    0
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "MCU",
+   "frame": "Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage, one hand open toward the left side of the frame, a cocky grin, about to rap.",
+   "action": "Starting from <Picture 1>, he raps, stomps his foot on the beat as if stepping on someone, then points at his rival.",
+   "card": "B",
+   "last_first": true,
+   "seed_bump": 1000
+  },
+  {
+   "id": "L02",
+   "at": [
+    "B",
+    1
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "CU",
+   "frame": "Close-up: Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage, tapping his temple with his quill pen, a mocking grin, emerald rim light.",
+   "action": "Starting from <Picture 1>, he raps, taps his temple with the quill on the beat, then twirls a finger next to his head like 'crazy'."
+  },
+  {
+   "id": "F07",
+   "at": [
+    "B",
+    2
+   ],
+   "kind": "silent",
+   "scene": "leipzig",
+   "subj": [],
+   "dist": "MS",
+   "frame": "Flashback, Leipzig 1684: a freshly printed scholarly journal lies open on a wooden table in a print shop, the cover clearly printed with \"ACTA ERUDITORUM\" and \"1684\", more copies stacked beside it and being bundled.",
+   "action": "Starting from <Picture 1>, hands stack the printed journals and tie them into bundles, and the camera pushes in slowly on the cover.",
+   "gfx": [
+    "acta"
+   ]
+  },
+  {
+   "id": "L03",
+   "at": [
+    "B",
+    3
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "MS",
+   "frame": "Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage, both palms raised and a mock-puzzled frown, emerald-teal light.",
+   "action": "Starting from <Picture 1>, he raps, counts years on his fingers with a big exaggerated frown, then throws both hands up."
+  },
+  {
+   "id": "F08",
+   "at": [
+    "B",
+    4
+   ],
+   "kind": "silent",
+   "scene": "classroom",
+   "subj": [
+    "T"
+   ],
+   "dist": "MS",
+   "frame": "Insert in a modern Taiwanese high-school classroom: a teacher's hand writes on a green chalkboard, which clearly shows \"dy/dx\" and a big integral sign \"∫ f(x) dx\" in white chalk; students at desks copy it into their notebooks.",
+   "action": "Starting from <Picture 1>, the chalk finishes drawing the long integral sign, and the students copy it down quickly, one sighing.",
+   "gfx": [
+    "notation"
+   ]
+  },
+  {
+   "id": "F09",
+   "at": [
+    "B",
+    5
+   ],
+   "kind": "silent",
+   "scene": "cambridge",
+   "subj": [],
+   "dist": "MS",
+   "frame": "Insert, Cambridge around 1800: bored young ENGLISH (white European) students of the year 1800 in black academic gowns sit on wooden benches in an old dusty lecture room facing a blackboard covered in Newton's dot notation (letters with small dots above them) written in chalk; an elderly lecturer in a wig taps the board.",
+   "action": "Starting from <Picture 1>, the lecturer taps the dotted letters again and again, and the students yawn and slump lower on their benches.",
+   "gfx": [
+    "dots"
+   ]
+  },
+  {
+   "id": "L04",
+   "at": [
+    "B",
+    6
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "CU",
+   "frame": "Close-up: Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage, holding up an imaginary report in one hand with a sarcastic grin, blue rim light.",
+   "action": "Starting from <Picture 1>, he raps, pretends to read the report with exaggerated awe, then tosses it away over his shoulder.",
+   "last_first": true,
+   "seed_bump": 1000
+  },
+  {
+   "id": "F10",
+   "at": [
+    "B",
+    7
+   ],
+   "kind": "silent",
+   "scene": "report",
+   "subj": [
+    "A"
+   ],
+   "dist": "MCU",
+   "frame": "Flashback, 1712, night: older Isaac Newton in a long white wig sits alone at a candlelit desk, secretly writing a long official report with a quill, a sly satisfied look on his face.",
+   "action": "Starting from <Picture 1>, he writes faster, glances around to make sure nobody is watching, then blows out the candle with a smirk.",
+   "gfx": [
+    "report"
+   ]
+  },
+  {
+   "id": "R03",
+   "at": [
+    "B",
+    8
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "CU",
+   "frame": "Reaction close-up: Isaac Newton in amber light grits his teeth behind closed lips, jaw clenched, eyes burning, mouth closed.",
+   "action": "Starting from <Picture 1>, his jaw tightens, a vein pulses at his temple and he slowly narrows his eyes at his rival; his mouth stays closed."
+  },
+  {
+   "id": "F11",
+   "at": [
+    "B",
+    9
+   ],
+   "kind": "silent",
+   "scene": "binary",
+   "subj": [],
+   "dist": "MS",
+   "frame": "Insert: a modern dark computer room; a big monitor shows streams of glowing binary digits \"0 1 0 1 1 0\" flowing down the screen beside an old yellowed manuscript page with a handwritten binary number table; nobody is in the room - no people at all.",
+   "action": "Starting from <Picture 1>, the glowing 0s and 1s stream faster down the screen and the camera pushes in slowly.",
+   "gfx": [
+    "binary"
+   ]
+  },
+  {
+   "id": "L05",
+   "at": [
+    "B",
+    10
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "MCU",
+   "frame": "Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage, tracing a big circle in the air with his quill like a planet's orbit, a sly grin, emerald-teal light.",
+   "action": "Starting from <Picture 1>, he raps, traces a planet's orbit in the air, then drops his hand sharply downward like a crashing stock chart."
+  },
+  {
+   "id": "F12",
+   "at": [
+    "B",
+    11
+   ],
+   "kind": "silent",
+   "scene": "bubble",
+   "subj": [],
+   "dist": "WIDE",
+   "frame": "Flashback, London 1720: a panicked crowd of men in wigs and tricorn hats packs a narrow street of stock brokers, waving worthless share papers, some tearing them up.",
+   "action": "Starting from <Picture 1>, the men shout and push, one tears his share papers in half and throws them in the air, papers flutter down.",
+   "gfx": [
+    "bubble"
+   ]
+  },
+  {
+   "id": "F13",
+   "at": [
+    "B",
+    12
+   ],
+   "kind": "silent",
+   "scene": "alchemy",
+   "subj": [
+    "A"
+   ],
+   "dist": "MS",
+   "frame": "Flashback, night: Isaac Newton in shirtsleeves works in a cluttered alchemy laboratory, glass flasks and a glowing furnace around him, holding a small crucible with a dull grey lump of lead in tongs over the flames.",
+   "action": "Starting from <Picture 1>, he lowers the crucible into the flames, sparks and orange smoke rise, and he leans in with wide hopeful eyes.",
+   "gfx": [
+    "alchemy"
+   ]
+  },
+  {
+   "id": "L06",
+   "at": [
+    "B",
+    13
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "CU",
+   "frame": "Close-up from the chest up: Gottfried Leibniz at the chrome microphone on the emerald-teal right side, one finger tapping the side of his huge wig at the temple, a mocking grin, the amber English library and the emerald baroque library softly blurred behind him.",
+   "action": "Starting from <Picture 1>, he raps, taps his temple twice with one finger, then points across the stage with a laugh.",
+   "last_first": true,
+   "seed_bump": 3000
+  },
+  {
+   "id": "F14",
+   "at": [
+    "B",
+    14
+   ],
+   "kind": "silent",
+   "scene": "exam",
+   "subj": [
+    "T"
+   ],
+   "dist": "MS",
+   "frame": "Insert in a modern Taiwanese exam hall: rows of students bent over exam papers, a close student's paper clearly shows a big handwritten integral \"∫\" and \"dx\" in pencil.",
+   "action": "Starting from <Picture 1>, the student writes another integral sign quickly, erases a mistake, and keeps writing as the clock ticks."
+  },
+  {
+   "id": "L07",
+   "at": [
+    "B",
+    15
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "MS",
+   "frame": "Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage, miming wiping something off a board with the back of his hand, a triumphant grin, blue-silver light.",
+   "action": "Starting from <Picture 1>, he raps, wipes the air twice like erasing a blackboard, then spreads his arms wide."
+  },
+  {
+   "id": "L08",
+   "at": [
+    "B",
+    16
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "MCU",
+   "frame": "Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage, holding his white quill pen up like a sword, fierce eyes, emerald light flaring behind him.",
+   "action": "Starting from <Picture 1>, he raps harder, slashes the quill through the air twice like a sword, then points it at his rival."
+  },
+  {
+   "id": "R04",
+   "at": [
+    "B",
+    17
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "A"
+   ],
+   "dist": "MCU",
+   "frame": "Reaction shot: Isaac Newton in amber light keeps a stiff proud face, but his hand clutching the glass prism trembles, mouth closed.",
+   "action": "Starting from <Picture 1>, his proud face freezes, he grips the prism tighter and glances away; his mouth stays closed.",
+   "last_first": true,
+   "seed_bump": 1000
+  },
+  {
+   "id": "D02",
+   "at": [
+    "B",
+    18
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B",
+    "A"
+   ],
+   "dist": "MCU",
+   "frame": "Waist-up side-on two-shot, the two men stand close, about one metre apart, both faces large and visible in profile: Gottfried Leibniz on the RIGHT leans toward his rival and raps with one hand raised high; Isaac Newton on the LEFT faces him stiffly with arms crossed, mouth closed; amber light left, emerald light right.",
+   "action": "Starting from <Picture 1>, Leibniz raps at Newton and raises his hand higher like claiming a throne; Newton keeps his arms crossed and lips pressed together.",
+   "cons": [
+    "Isaac Newton on the left keeps his lips pressed together from the first to the last frame; he never opens his mouth."
+   ]
+  },
+  {
+   "id": "L09",
+   "at": [
+    "B",
+    19
+   ],
+   "kind": "sing",
+   "scene": "arena",
+   "subj": [
+    "B"
+   ],
+   "dist": "CU",
+   "frame": "Close-up from the chest up: Gottfried Leibniz stands at the chrome microphone on the emerald-teal right side of the stage leaning toward the camera with fierce triumphant eyes, one hand raised ready to point, the amber English library and the emerald baroque library softly blurred behind him.",
+   "action": "Starting from <Picture 1>, he shouts the final line slowly, every word hit hard, and on the last word points straight at the camera.",
+   "last_first": true
+  },
+  {
+   "id": "T04",
+   "at": [
+    "mark",
+    "b_last",
+    0.3
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "T"
+   ],
+   "dist": "WIDE",
+   "frame": "Audience B-roll: the students in the arena explode with joy, jumping, screaming and throwing their calculus notes into the air, confetti and emerald light raining over them.",
+   "action": "Starting from <Picture 1>, the students jump, scream and throw papers into the air, confetti falling."
+  },
+  {
+   "id": "D03",
+   "at": [
+    "dj",
+    "verdict",
+    -0.3
+   ],
+   "kind": "silent",
+   "scene": "arena",
+   "subj": [
+    "A",
+    "B"
+   ],
+   "dist": "MS",
+   "frame": "Two-shot on the stage: Isaac Newton on the LEFT and Gottfried Leibniz on the RIGHT stand back to back with arms crossed, both stubbornly looking away from each other with sulky faces, mouths closed.",
+   "action": "Starting from <Picture 1>, both men glance back over their shoulders at each other at the same time, catch each other's eye, and quickly turn away again with a huff; both mouths closed.",
+   "gfx": [
+    "verdict"
+   ]
+  },
+  {
+   "id": "K04",
+   "at": [
+    "dj",
+    "end",
+    -0.3
+   ],
+   "kind": "sing",
+   "voice": "dj",
+   "scene": "arena",
+   "subj": [
+    "K"
+   ],
+   "dist": "MCU",
+   "frame": "Émilie du Châtelet behind her DJ booth faces the camera with both hands open palms-up as if asking the audience a question, a big playful smile, the cheering student crowd and the amber and emerald sides behind her.",
+   "action": "Starting from <Picture 1>, she shouts the questions to the camera, points at the viewer with both hands on the last words, then spreads her arms wide with a laugh."
+  }
+ ]
+}
