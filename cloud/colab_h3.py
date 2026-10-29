@@ -4,7 +4,7 @@ Needs: the Colab CLI (uv tool install google-colab-cli; Windows also: python clo
 once with the Google account that has the Google AI plan (or Colab pay-as-you-go compute units). Standard library only.
 
   python cloud/colab_h3.py check                       # CLI works? balance? which GPUs?
-  python cloud/colab_h3.py start                       # DEFAULT = full install, same as the full 32G repo (voice, Qwen, Music 3, H3, FlashVSR; ~10.5 min), 2 ComfyUI instances
+  python cloud/colab_h3.py start                       # DEFAULT = full install, same as the full 32G repo (voice, Qwen, Music 3, H3, FlashVSR, YuE2, Ming TTS), 2 ComfyUI instances
   python cloud/colab_h3.py start --h3-only             # only ComfyUI + H3 (~3.7 min), 2 ComfyUI instances: local prep + cloud H3, or hybrid
   python cloud/colab_h3.py batch a/spec.json b/spec.json ...   # upload -> render on the VM -> download clips next to each spec
   python cloud/colab_h3.py keepalive --minutes 30      # keep the VM while you review (Colab reclaims it after ~20 min idle)
@@ -12,6 +12,7 @@ once with the Google account that has the Google AI plan (or Colab pay-as-you-go
   python cloud/colab_h3.py full-setup                  # same as the default start (kept as an alias)
   python cloud/colab_h3.py smoke                       # after the full install: run setup/smoke_test.py on the VM, download smoke_out/
   python cloud/colab_h3.py film pipeline/template_local [stage ...]   # after the full install: run make_film.py on the VM, sync out/ back
+  python cloud/colab_h3.py film pipeline/my_battle yue songs dj ...    # a folder with battle.json runs make_battle.py instead (rap battle)
   python cloud/hybrid_h3.py out/h3/S01 out/h3/S02 ...  # local GPU + Colab together (measured 2026-10-11: 34 shots 17.9 min vs 32.6 min local)
 
 Measured 2026-10-10 (Colab, Google AI Pro): G4 = RTX PRO 6000 Blackwell 96 GB, 8.90 compute units/hour; one 90-frame DMAD shot 42 s
@@ -289,7 +290,9 @@ def cmd_full_setup(a):
 
 VM_ENV = ("AI_ROOT=/content/AI AI_TOOLS=/content/repo/tools PY_H3=python PY_VOICE=/content/AI/Voice/venv/bin/python "
           "PY_BREEZE=/content/AI/BreezeTTS/venv/bin/python PY_BREEZYVOICE=/content/AI/BreezyVoice/venv/bin/python "
-          "COMFY_DIR=/content/AI/H3/ComfyUI-0.36.0 H3_BACKEND=local UPSCALE=lanczos H3_PARALLEL=2")
+          "COMFY_DIR=/content/AI/H3/ComfyUI-0.36.0 H3_BACKEND=local UPSCALE=lanczos H3_PARALLEL=2 "
+          "MING_COMFY_DIR=/content/AI/H3/ComfyUI-0.36.0 MING_COMFY_PORT=8188 "
+          "MING_COMFY_INPUT=/content/AI/H3/ComfyUI-0.36.0/input MING_COMFY_OUTPUT=/content/AI/H3/ComfyUI-0.36.0/output")
 
 
 def cmd_smoke(a):
@@ -303,9 +306,11 @@ def cmd_smoke(a):
 
 
 def cmd_film(a):
-    """Full-cloud make_film.py: upload the film folder (film.json + out/), run the given stages on the VM, bring out/ back."""
+    """Full-cloud make_film.py (or make_battle.py when the folder has battle.json): upload the folder, run the given stages on the VM, bring out/ back."""
     fd = Path(a.film_dir).resolve()
     rel = fd.relative_to(REPO).as_posix()
+    battle = (fd / "battle.json").exists()                   # 對決範本：make_battle.py 要用 Voice venv 跑（librosa、stable-ts、opencc 在那裡）
+    script = "/content/AI/Voice/venv/bin/python make_battle.py" if battle else "python make_film.py"
     # 本機設的 ONLY／ALLOW_REVIEW／UPSCALE 也帶到 VM（make_film.py 用它們重做指定鏡頭、放行審查）；--env KEY=VALUE 可再加
     extra = [f"{k}={os.environ[k]}" for k in ("ONLY", "ALLOW_REVIEW", "UPSCALE") if os.environ.get(k)] + list(a.env)
     for kv in extra:
@@ -314,15 +319,27 @@ def cmd_film(a):
     env = VM_ENV + "".join(f" {k}='{v}'" for k, v in (kv.split("=", 1) for kv in extra))
     if extra:
         print(f"[film] 帶到 VM 的設定：{' '.join(extra)}", flush=True)
+    # out/ 只上傳 VM 上沒有、或大小不同的檔：上一段 film 同步回來的 out/（YuE2 歌、首幀、H3 片段）VM 上本來就有，
+    # 整包重傳會到幾百 MB，Colab 上傳常被斷線（2026-10-29 實測 380 MB 失敗）。out/ 以外（設定、程式、歌）每次都傳——
+    # 只比大小會漏掉「改了但長度一樣」的 battle.json（同日實測）
+    try:
+        have = json.loads(vm(a.name, f"import json, os\nd = '/content/repo/{rel}'\nprint(json.dumps({{os.path.relpath(os.path.join(r, f), d).replace(os.sep, '/'): "
+                                     f"os.path.getsize(os.path.join(r, f)) for r, _, fs in os.walk(d) for f in fs}}))").strip().splitlines()[-1])
+    except Exception:
+        have = {}
     tmp = Path(tempfile.mkdtemp()) / "film.zip"
+    n_skip = 0
     with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as z:
         for f in fd.rglob("*"):
             if f.is_file() and "__pycache__" not in f.parts:
-                z.write(f, f.relative_to(fd).as_posix())
-    print(f"[film] 上傳 {rel}（{tmp.stat().st_size / 1e6:.1f} MB）…", flush=True)
+                r = f.relative_to(fd).as_posix()
+                if r.startswith("out/") and have.get(r) == f.stat().st_size:
+                    n_skip += 1; continue
+                z.write(f, r)
+    print(f"[film] 上傳 {rel}（{tmp.stat().st_size / 1e6:.1f} MB；VM 上已有的 {n_skip} 個檔跳過）…", flush=True)
     upload(a.name, tmp, "/content/film.zip")
     vm_sh(a.name, f"mkdir -p /content/repo/{rel} && cd /content/repo/{rel} && python -c \"import zipfile; zipfile.ZipFile('/content/film.zip').extractall('.')\""
-                  f" && nohup sh -c 'env {env.replace("'", "'" + chr(92) + "''")} python make_film.py {' '.join(a.stages)} > /content/film.log 2>&1; echo FILM_EXIT $? >> /content/film.log'"
+                  f" && nohup sh -c 'env {env.replace("'", "'" + chr(92) + "''")} {script} {' '.join(a.stages)} > /content/film.log 2>&1; echo FILM_EXIT $? >> /content/film.log'"
                   f" > /dev/null 2>&1 &")
     poll(a.name, "/content/film.log", "FILM_EXIT", fail=("FAILED:", "Traceback"), every=60, show=r"^\[stage\]|^→|成片|FILM_EXIT")
     vm_sh(a.name, f"cd /content/repo/{rel} && rm -f /content/film_out.zip && python -c \"import shutil; shutil.make_archive('/content/film_out', 'zip', 'out')\"")
@@ -352,7 +369,7 @@ def main():
     sub.add_parser("keepalive").add_argument("--minutes", type=int, default=30)
     sub.add_parser("stop"); sub.add_parser("status"); sub.add_parser("smoke")
     p = sub.add_parser("film"); p.add_argument("film_dir"); p.add_argument("stages", nargs="*")
-    p.add_argument("--env", action="append", default=[], help="extra KEY=VALUE for make_film.py on the VM (e.g. ONLY=S3); ONLY/ALLOW_REVIEW/UPSCALE set locally are passed automatically")
+    p.add_argument("--env", action="append", default=[], help="extra KEY=VALUE for make_film.py / make_battle.py on the VM (e.g. ONLY=S3); ONLY/ALLOW_REVIEW/UPSCALE set locally are passed automatically")
     a = ap.parse_args()
     {"check": cmd_check, "start": cmd_start, "batch": cmd_batch, "keepalive": cmd_keepalive, "stop": cmd_stop, "status": cmd_status,
      "full-setup": cmd_full_setup, "smoke": cmd_smoke, "film": cmd_film}[a.cmd](a)

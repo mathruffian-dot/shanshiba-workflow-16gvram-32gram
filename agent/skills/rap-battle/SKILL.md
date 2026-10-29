@@ -37,7 +37,7 @@ description: 歷史人物饒舌對決影片（源自「三師爸Sense Bar」頻�
 - 有 → 用 Suno（網頁 Custom 模式貼 `out/songtext/suno_*`，或 Kie API `kie_suno.py`）。編曲最豐富、rap 最有攻擊性、會有刷碟聲。
 - 沒有 → 問要不要改用本機 **YuE2 14 版範本**（`templates/song_yue2_v14/`），說清楚：攻擊性和韻律感比 Suno 弱、權重 CC BY-NC 不能商用。不要自己默默換。
 - YuE2 也不滿意 → Plan C **ACE-Step 1.5**（`tools/ace_song.py`，拍速最穩、MIT 可商用，但人聲有金屬聲）。
-- 本機跑不動 YuE2 的人：Colab 版安裝目前**沒有預裝 YuE2**（要自己下載 `setup/downloads_yue2.json`，未實測）；這時用 Suno 最省事。
+- 本機跑不動 YuE2 的人：Colab 完整安裝已預裝 YuE2，`python cloud/colab_h3.py film <對決資料夾> yue` 在雲端生歌；有 Suno 還是最省事。
 
 ## 自審（交片前一定做）
 
@@ -49,4 +49,5 @@ description: 歷史人物饒舌對決影片（源自「三師爸Sense Bar」頻�
 - **一嗆一笑**：一人唱的時候，另一人閉嘴、不屑微笑（反應鏡、雙人同框都一樣）。
 - **觀眾是一般人**：典故太難就換現場梗；每個轉折要有一句歌詞、一張字卡或一個畫面講白；傳說要寫「傳說」，數字要有出處。
 - **配色、封面每場都換**：開工先列最近 2–3 場用過的配色，選一套貼題材、又不一樣的（場景燈光、字幕、特效、字卡、封面一起換）。
+- DJ 口白預設用 **Ming-3.0-TTS**（MIT，可商用；`make_battle.py dj`）。參考音預設由 Breeze TTS 2 依文字設計（不能商用）→ 要營利就自己錄一段 10–20 秒放 `out/voice/ref_K.wav`。
 - 授權：Suno 看你的方案（免費方案通常不能商用）；YuE2 權重、Qwen-Image 2.1、Breeze TTS 2 都不能商用；MiniMax H3 授權排除美、歐盟、英、南韓（Colab 機房在美國，自行評估）。公開時標示 AI 生成。

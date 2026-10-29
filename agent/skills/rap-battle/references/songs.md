@@ -5,9 +5,9 @@
 | 情況 | 用什麼 | 備註 |
 |:--|:--|:--|
 | 有 Suno 帳號 | **Suno**（網頁 Custom 模式，或 Kie.ai API） | 編曲最豐富、rap 最有攻擊性、會自帶刷碟聲。四場對決都用它 |
-| 沒有 Suno | 先問使用者 → **YuE2 14 版**（`templates/song_yue2_v14/`） | 本機 ComfyUI 原生節點；比 Suno 平、攻擊性弱；權重 CC BY-NC |
+| 沒有 Suno | 先問使用者 → **YuE2 14 版**（`make_battle.py yue`，配方 `templates/song_yue2_v14/`） | ComfyUI 原生節點；比 Suno 平、攻擊性弱；權重 CC BY-NC |
 | YuE2 也不行 | ACE-Step 1.5 XL（`tools/ace_song.py`） | 拍速最穩、MIT；人聲有金屬聲 |
-| 本機沒顯卡 | Suno 最省事 | Colab 版安裝沒有預裝 YuE2（未實測） |
+| 本機沒顯卡 | Suno 最省事；沒有 Suno 就在 Colab 跑 YuE2 | Colab 完整安裝已預裝 YuE2：`colab_h3.py film <對決資料夾> yue` |
 
 不要自己從 Suno 換成 YuE2：換之前一定問。
 
@@ -36,13 +36,13 @@ Suno 不吃藝人名字，要寫成特徵。範例見 `pipeline/template_battle/
 
 ## YuE2（沒有 Suno 時）
 
-照 `templates/song_yue2_v14/README.md`：
+一條指令（配方照 `templates/song_yue2_v14/README.md`）：
 ```
-make_battle.py songtext                      → out/songtext/yue_A_lyrics.txt、yue_A_style.txt
-python tools/yue_song.py battle_A A --style out/songtext/yue_A_style.txt --lyrics out/songtext/yue_A_lyrics.txt --out work/song_A --seeds 1,2,3,4,5,6,7,8,9,10,11,12
-<Voice venv>/python tools/pick_song.py work/song_A out/songtext/yue_A_lyrics.txt
+make_battle.py yue                           # songtext → 每人 YuE2 抽 YUE_SEEDS 首（預設 10）→ 只留目標 BPM、逐句聽寫排序 → 第一名放 song/
+python cloud/colab_h3.py film pipeline/my_battle yue   # 沒有顯卡：同一件事在 Colab 跑，out/ 同步回來
 ```
-- 每首抽 10–12 個 seed，只留 143.6 BPM 的（約一半會跑掉），再照逐句聽寫排序，**人聽過再選**。
+- 目標 BPM 讀 `yue_style` 裡的「144 BPM」（或填 `rappers.<A|B>.yue_bpm`）；約一半會跑掉，全掉就多抽（`YUE_SEEDS=11,12,…,20`）。
+- 第一名只是聽寫初篩，**人聽過 `out/yue/<A|B>/` 的候選再定**；換歌就把那首轉檔覆蓋 `song/A.mp3`，再跑 `songs`。
 - YuE2 沒有器樂前奏、刷碟不一定有：A 停在拍上→B 的接法照樣能用，但前奏很短時 DJ 口白會把音樂往後推（範本自動處理）。
 
 ## 檢查（`make_battle.py songs` 自動做）

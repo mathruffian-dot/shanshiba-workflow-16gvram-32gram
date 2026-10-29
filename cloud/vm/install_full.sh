@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Runs ON the Colab VM (started by cloud/colab_h3.py full-setup): the WHOLE local stack on Linux, for people whose computer
 # cannot run anything locally - voice (VoxCPM2, faster-whisper, separator), BreezyVoice, Breeze TTS 2, ComfyUI (H3, Qwen-Image 2.1,
-# Qwen-Edit 2511, Music 3, FlashVSR) + CJK fonts. Tested on a Colab L4 / G4 2026-10-10: setup/smoke_test.py passes everything
+# Qwen-Edit 2511, Music 3, FlashVSR, YuE2, Ming-3.0-TTS) + CJK fonts. Tested on a Colab L4 / G4 2026-10-10: setup/smoke_test.py passes everything
 # except rtx_vsr (Windows only; Linux uses FlashVSR or lanczos). Models ~150 GB of the VM's ~236 GB disk.
 # Usage: AI_ROOT=/content/AI REPO=/content/repo bash install_full.sh   (prints [full] lines, FULL_DONE at the end)
 set -u
@@ -23,7 +23,8 @@ EOF
 (
   cd "$REPO/setup"
   for m in /content/downloads_h3core.json downloads_uncensored.json downloads_dmad.json downloads_veda.json downloads_qwen_image.json downloads_qwen_image_edit.json \
-           downloads_music3.json downloads_flashvsr.json downloads_voxcpm2.json downloads_breezyvoice.json downloads_breeze_tts2.json; do
+           downloads_music3.json downloads_flashvsr.json downloads_voxcpm2.json downloads_breezyvoice.json downloads_breeze_tts2.json \
+           downloads_yue2.json downloads_ming.json; do
     t=$(date +%s)
     n=$(basename "$m")
     AI_ROOT="$AI" python download.py "$m" > "/content/dl_$n.log" 2>&1 && echo "[full] model $n OK $(( $(date +%s) - t ))s" \
@@ -70,6 +71,13 @@ if [ ! -f "$C/main.py" ]; then
   uv pip install --system -q -r /content/req_comfy.txt comfy-kitchen==0.2.37 && echo "[full] comfy OK" || echo "[full] comfy FAILED"
   git clone -q https://github.com/veda-sparse/Veda-on-ComfyUI "$C/custom_nodes/Veda-on-ComfyUI" && git -C "$C/custom_nodes/Veda-on-ComfyUI" checkout -q 67e4eb5541b648555563144401ebaba832bd73ec && echo "[full] veda node OK"
   sed "s#C:/AI/H3/models#$AI/H3/models#" "$REPO/setup/extra_model_paths.yaml" > "$C/extra_model_paths.yaml"
+fi
+# YuE2 (rap-battle songs without Suno) = native ComfyUI nodes, only the checkpoint above. Ming-3.0-TTS 0.5B (fixed-track voice, DJ lines;
+# MIT) = custom node in the same ComfyUI (the local install keeps it in a separate 0.41 on port 8189; here tools/make_ming.py uses 8188).
+if [ ! -d "$C/custom_nodes/ComfyUI-Ming-3-tts" ]; then
+  git clone -q https://github.com/Saganaki22/ComfyUI-Ming-3-tts "$C/custom_nodes/ComfyUI-Ming-3-tts" \
+    && git -C "$C/custom_nodes/ComfyUI-Ming-3-tts" checkout -q 1e97248 \
+    && uv pip install --system -q onnxruntime flatbuffers tqdm && echo "[full] ming node OK" || echo "[full] ming node FAILED"
 fi
 mark comfy
 

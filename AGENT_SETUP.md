@@ -102,7 +102,7 @@ xcopy /E /I <repo>\tools C:\AI\tools
 
 ### 2f.（選用）Ming-3.0-TTS 0.5B 固定音軌（MIT，可營利；原專案 2026-10-29 起的配音備案預設）
 
-H3 念錯抽不出來的台詞，用角色參考音念成固定音軌（`tools\make_ming.cmd jobs.json`，格式同 BreezyVoice）。原專案把節點裝在**另一份 ComfyUI 0.41**（`C:\AI\H3\ComfyUI-0.41.0`、8189 埠，`models`／`input`／`output` 連到主 ComfyUI），H3 用的那份不動；節點只在 0.41 測過。
+H3 念錯抽不出來的台詞，用角色參考音念成固定音軌（`tools\make_ming.cmd jobs.json`，格式同 BreezyVoice）；饒舌對決範本的 DJ 口白也用它。**Colab 完整安裝已內建**（節點裝在 VM 的 ComfyUI、8188 埠，`colab_h3.py` 自動設好環境變數），下面是本機安裝。原專案把節點裝在**另一份 ComfyUI 0.41**（`C:\AI\H3\ComfyUI-0.41.0`、8189 埠，`models`／`input`／`output` 連到主 ComfyUI），H3 用的那份不動；節點只在 0.41 測過。
 
 ```
 git clone https://github.com/Saganaki22/ComfyUI-Ming-3-tts C:\AI\H3\ComfyUI-0.41.0\custom_nodes\ComfyUI-Ming-3-tts

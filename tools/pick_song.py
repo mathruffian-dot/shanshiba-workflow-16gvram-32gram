@@ -22,7 +22,7 @@ for f in sorted(d.glob("*.flac")):
         print(f.name, "BPM", round(bpm, 1), "→ 不要"); continue
     voc = next(sep.glob(f"{f.stem}_(Vocals)*"), None)
     if voc is None:
-        subprocess.run([str(AI / "Voice" / "venv" / "Scripts" / "audio-separator.exe"), str(f), "--model_filename", "model_bs_roformer_ep_317_sdr_12.9755.ckpt",
+        subprocess.run([str(Path(sys.executable).parent / ("audio-separator.exe" if os.name == "nt" else "audio-separator")), str(f), "--model_filename", "model_bs_roformer_ep_317_sdr_12.9755.ckpt",
                         "--model_file_dir", str(AI / "Voice" / "models" / "separator"), "--output_dir", str(sep), "--output_format", "FLAC"], check=True, capture_output=True)
         voc = next(sep.glob(f"{f.stem}_(Vocals)*"))
     a, vsr = sf.read(str(voc), dtype="float32", always_2d=True); a = a.mean(1)

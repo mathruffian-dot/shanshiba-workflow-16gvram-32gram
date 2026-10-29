@@ -151,15 +151,27 @@ _DET = {}
 
 
 def faces(frame_bgr):
-    """臉框 [(x, y, w, h)]：有 YuNet 模型（AI_ROOT/tools/models/face_detection_yunet_2023mar.onnx）用它，沒有就用 OpenCV 內建 Haar。"""
+    """臉框 [(x, y, w, h)]：YuNet 模型（AI_ROOT/tools/models/face_detection_yunet_2023mar.onnx，沒有就從 OpenCV 官方 opencv_zoo 下載，約 230 KB）；
+    下載不到才用 OpenCV 內建 Haar（OpenCV 5 已拿掉 Haar → 回傳空的，字卡只是不避臉。2026-10-29 Colab 實測）。"""
     import os
+    import urllib.request
     import cv2
     h, w = frame_bgr.shape[:2]
     yn = Path(os.environ.get("AI_ROOT", r"C:\AI")) / "tools" / "models" / "face_detection_yunet_2023mar.onnx"
+    if not yn.exists() and "yunet_tried" not in _DET:
+        _DET["yunet_tried"] = True
+        try:
+            yn.parent.mkdir(parents=True, exist_ok=True)
+            urllib.request.urlretrieve("https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/"
+                                       "face_detection_yunet_2023mar.onnx", str(yn))
+        except Exception as e:
+            print("（YuNet 下載失敗：", e, "）", flush=True)
     if yn.exists():
         det = _DET.get((w, h)) or cv2.FaceDetectorYN.create(str(yn), "", (w, h), 0.6); _DET[(w, h)] = det
         _, res = det.detect(frame_bgr)
         return [tuple(int(v) for v in r[:4]) for r in (res if res is not None else [])]
+    if not hasattr(cv2, "CascadeClassifier"):
+        return []
     hc = _DET.get("haar") or cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml"); _DET["haar"] = hc
     g = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY)
     return [tuple(int(v) for v in r) for r in hc.detectMultiScale(g, 1.1, 5, minSize=(60, 60))]

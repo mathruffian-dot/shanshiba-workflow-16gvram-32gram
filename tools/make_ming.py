@@ -29,15 +29,19 @@ from pathlib import Path
 
 import opencc
 
-TOOLS = Path(r"C:\AI\tools")
-VOICE_PY = r"C:\AI\Voice\venv\Scripts\python.exe"
-H3_PY = r"C:\AI\H3\venv\Scripts\python.exe"
-# 原專案：Ming 節點裝在另一份 ComfyUI 0.41（8189 埠；input／output／models 都連到 0.36），H3 用的 0.40（8188）不動。路徑不同用環境變數改。
-COMFY_DIR = Path(os.environ.get("MING_COMFY_DIR", r"C:\AI\H3\ComfyUI-0.41.0"))
+AI = Path(os.environ.get("AI_ROOT", r"C:\AI"))
+TOOLS = Path(__file__).resolve().parent
+_EXE = "Scripts/python.exe" if os.name == "nt" else "bin/python"
+VOICE_PY = os.environ.get("PY_VOICE", str(AI / "Voice" / "venv" / _EXE))
+H3_PY = os.environ.get("PY_H3", str(AI / "H3" / "venv" / _EXE))
+# 原專案：Ming 節點裝在另一份 ComfyUI 0.41（8189 埠；input／output／models 都連到 0.36），H3 用的 0.40（8188）不動。路徑不同用環境變數改
+# （Colab：colab_h3.py 指到 VM 上已經在跑的 8188，節點由 install_full.sh 裝好）。
+COMFY_DIR = Path(os.environ.get("MING_COMFY_DIR", str(AI / "H3" / "ComfyUI-0.41.0")))
 PORT = os.environ.get("MING_COMFY_PORT", "8189")
 COMFY = f"http://127.0.0.1:{PORT}"
-COMFY_INPUT = Path(os.environ.get("MING_COMFY_INPUT", r"C:\AI\H3\ComfyUI-0.36.0\input"))
-COMFY_OUTPUT = Path(os.environ.get("MING_COMFY_OUTPUT", r"C:\AI\H3\ComfyUI-0.36.0\output"))
+COMFY_INPUT = Path(os.environ.get("MING_COMFY_INPUT", str(AI / "H3" / "ComfyUI-0.36.0" / "input")))
+COMFY_OUTPUT = Path(os.environ.get("MING_COMFY_OUTPUT", str(AI / "H3" / "ComfyUI-0.36.0" / "output")))
+LOG = AI / "H3" / "comfy041_ming.log"
 T2S = opencc.OpenCC("t2s")   # 只做字形轉換；不要用 tw2sp（會把台灣用詞換成大陸用詞）
 
 
@@ -53,18 +57,19 @@ def ensure_comfy():
     except Exception:
         pass
     print(f"[ming] 啟動 ComfyUI（{COMFY_DIR.name}，{PORT} 埠）…", flush=True)
-    log = open(r"C:\AI\H3\comfy041_ming.log", "ab")
+    log = open(LOG, "ab")
+    detach = (dict(creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP) if os.name == "nt"
+              else dict(start_new_session=True))
     subprocess.Popen([H3_PY, "-X", "utf8", str(COMFY_DIR / "main.py"), "--listen", "127.0.0.1", "--port", PORT,
                       "--disable-auto-launch", "--preview-method", "none", "--cache-none", "--fast", "fp16_accumulation"],
-                     cwd=str(COMFY_DIR), stdout=log, stderr=log, stdin=subprocess.DEVNULL,
-                     creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP)
+                     cwd=str(COMFY_DIR), stdout=log, stderr=log, stdin=subprocess.DEVNULL, **detach)
     for i in range(90):
         time.sleep(2)
         try:
             api("/system_stats", timeout=4); print(f"[ming] ComfyUI 啟動完成（{(i + 1) * 2} 秒）", flush=True); return
         except Exception:
             pass
-    raise SystemExit("[ming] ComfyUI 三分鐘內沒起來，看 C:\\AI\\H3\\comfy041_ming.log")
+    raise SystemExit(f"[ming] ComfyUI 三分鐘內沒起來，看 {LOG}")
 
 
 def ming_text(t):

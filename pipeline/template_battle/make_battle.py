@@ -1,10 +1,12 @@
 """饒舌對決範本（橫式 1920x1080、24 fps）：讀 battle.json，從兩首歌一路做到成片＋自審。做新的一場只改 battle.json。
 Voice venv 執行（librosa、stable-ts 在這個環境；生圖、H3、放大會自己叫 H3 venv）。ComfyUI 要先開（tools/start_comfy.cmd）：
   <Voice venv>/python make_battle.py [stage ...] [--battle 別的設定.json] [--ver 1]
-stage（不給＝全部依序；songtext 不在預設順序裡）：
+stage（不給＝全部依序；songtext、yue 不在預設順序裡）：
   songtext  把歌詞、風格寫成 Suno／YuE2 可直接貼的文字檔（out/songtext/）→ 去生歌，挑好的放 song/A.mp3、song/B.mp3
+  yue       （沒有 Suno 時）YuE2 14 版每人抽 YUE_SEEDS 首（預設 10）→ 只留目標 BPM、逐句聽寫排序 → 第一名放到 song/（一定要人聽）
   songs     兩首歌：分人聲 → 歌詞強制對齊 → 逐句聽寫、BPM、最後一個字唱完的時間 → out/song/
-  dj        DJ 聲音：Breeze 設計參考音 → BreezyVoice 每句 8 候選自動挑 → out/voice/
+  dj        DJ 聲音：Breeze 設計參考音 → Ming-3.0-TTS 每句 4 候選（不合格句尾改「……」再抽 4）聽寫自動挑 → out/voice/ming/
+            （DJ_TTS=breezyvoice＝舊做法：BreezyVoice 每句 8 候選 → out/voice/bv/）
   audio     全片音軌：A 整首 → 停在拍上 → 1 小節 → B 整首 → 收尾淡出；DJ 口白插進前奏與片尾 → out/audio/
   chars     角色參考照（兩位饒舌手、DJ、麥克風）→ out/chars/
   scenes    擂台母版（空景）→ out/scenes/arena.png
@@ -51,6 +53,7 @@ PYBV = os.environ.get("PY_BREEZYVOICE", str(AI / "BreezyVoice" / "venv" / _EXE))
 SEP = str(Path(PYV).parent / ("audio-separator.exe" if os.name == "nt" else "audio-separator"))
 SEP_MODEL = "model_bs_roformer_ep_317_sdr_12.9755.ckpt"
 HOST = os.environ.get("COMFY_HOST", "http://127.0.0.1:8188")
+DJ_TTS = os.environ.get("DJ_TTS", "ming")    # ming（預設：MIT 可營利、台灣腔）｜breezyvoice（2026-10-28 以前的做法）
 UPSCALE = os.environ.get("UPSCALE", "rtxvsr" if os.name == "nt" else "lanczos")   # rtxvsr（只有 Windows）｜lanczos
 SR, FPS, W, H = 48000, 24, 1920, 1080
 R, DJ = CFG["rappers"], CFG["dj"]
@@ -167,6 +170,36 @@ def songtext():
           "  挑好的歌放到 battle.json 的 rappers.<A|B>.song（預設 song/A.mp3、song/B.mp3）", flush=True)
 
 
+@stage("yue")
+def yue():
+    """沒有 Suno 時：YuE2 14 版（templates/song_yue2_v14）每人抽 YUE_SEEDS 首 → pick_song.py 只留目標 BPM（YuE2 約一半會跑掉）、逐句聽寫排序
+    → 第一名轉成 rappers.<A|B>.song。目標 BPM＝rappers.<A|B>.yue_bpm，沒填就讀 yue_style 裡的「NNN BPM」。ComfyUI 要開著（Colab 上也能跑）。
+    ⚠ 聽寫排序只是初篩，一定要人聽 out/yue/<A|B>/ 的候選；要換就把那首轉檔覆蓋 song/ 裡的檔，再跑 songs。"""
+    if not (OUT / "songtext" / "yue_A_lyrics.txt").exists():
+        songtext()
+    seeds = os.environ.get("YUE_SEEDS", ",".join(map(str, range(1, 11))))
+    for k, r in R.items():
+        dst = (HERE / r["song"]).resolve()
+        if dst.exists():
+            print(f"{k}：{dst} 已經有了，跳過（要重生就刪掉它）", flush=True)
+            continue
+        d = OUT / "yue" / k; lyr = OUT / "songtext" / f"yue_{k}_lyrics.txt"
+        run([PYV, T / "yue_song.py", "battle", k, "--style", OUT / "songtext" / f"yue_{k}_style.txt", "--lyrics", lyr, "--out", d, "--seeds", seeds])
+        free_comfy()                                           # 讓聽寫模型有顯存
+        m = re.search(r"(\d+(?:\.\d+)?)\s*BPM", r.get("yue_style", ""))
+        bpm = r.get("yue_bpm") or (float(m.group(1)) if m else None)
+        run([PYV, T / "pick_song.py", d, lyr] + (["--bpm", bpm] if bpm else []))
+        pick = json.loads((d / "pick.json").read_text(encoding="utf-8"))
+        if not pick:
+            raise SystemExit(f"{k}：{seeds} 這幾首都不是目標 BPM（{bpm}）→ 多抽幾個 seed（YUE_SEEDS=11,12,...,20）"
+                             f"或在 battle.json 填 rappers.{k}.yue_bpm（librosa 實際量到的值）")
+        best = next(iter(pick))
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        run(["ffmpeg", "-y", "-loglevel", "error", "-i", d / best, dst])
+        print(f"{k} {r['name']}：{len(pick)} 首拍速對，第一名 {best} {pick[best]} → {dst}", flush=True)
+    print("→ 一定要人聽 out/yue/<A|B>/ 的候選（排序在 pick.json）：唱錯字、聲音不像角色就換一首或多抽", flush=True)
+
+
 def sep_stems(src, d):
     """BS-RoFormer 分出人聲與伴奏（只做一次）。"""
     d.mkdir(parents=True, exist_ok=True)
@@ -244,11 +277,36 @@ def songs():
 # ------------------------------------------------------------------------------------------------ DJ 聲音
 @stage("dj")
 def dj():
-    """Breeze 依文字設計 DJ 參考音 → BreezyVoice 每句 8 候選 → 自動挑（聽寫＋台灣國語答案卷比腔調）。同 template_local 的 fixed 做法。"""
+    """Breeze 依文字設計 DJ 參考音（也可以放自己錄的 out/voice/ref_K.wav＋voice_sample 逐字稿）→ Ming-3.0-TTS 每句 4 候選、不合格的句尾改「……」
+    再抽 4 → 聽寫自動挑（tools/make_ming.py）。原專案 2026-10-28 試聽 Ming「聲音非常的好，也沒有大陸腔」，MIT 可營利。
+    DJ_TTS=breezyvoice＝舊做法（BreezyVoice 每句 8 候選，聽寫＋台灣國語答案卷比腔調）。"""
     free_comfy()
     vd = OUT / "voice"; vd.mkdir(exist_ok=True)
     jobs = [] if (vd / "ref_K.wav").exists() else [dict(name="ref_K", text=DJ["voice_sample"], instruction=DJ["voice_design"],
                                                         seed=int(DJ.get("voice_seed", 7)))]
+    if DJ_TTS == "ming":
+        if jobs:
+            (OUT / "breeze.json").write_text(json.dumps(dict(out_dir="voice", jobs=jobs), ensure_ascii=False, indent=1), encoding="utf-8")
+            run([PYB, T / "breeze_batch.py", "breeze.json"], cwd=OUT)
+        mj = [dict(name=f"dj_{key}", text=DJ.get("tts", {}).get(key, text), ref_audio="voice/ref_K.wav", ref_text=DJ["voice_sample"])
+              for key, text in DJ["lines"].items() if not (vd / "ming" / f"dj_{key}.wav").exists()]
+        if not mj:
+            return
+        (OUT / "ming.json").write_text(json.dumps(dict(out_dir="voice/ming", seeds=4, extra_seeds=4, jobs=mj), ensure_ascii=False, indent=1),
+                                       encoding="utf-8")
+        run([PYV, T / "make_ming.py", "ming.json"], cwd=OUT)
+        mp = json.loads((vd / "ming" / "asr_picks.json").read_text(encoding="utf-8"))
+        bad = []
+        for j in mj:
+            p = mp.get(j["name"], {})
+            best = next((c for c in p.get("cands", []) if c["file"] == p.get("pick")), {})
+            print("pick", j["name"], j["text"], "→", p.get("pick"), best.get("asr", ""), flush=True)
+            if p.get("needs_review"):
+                bad.append(f"{j['name']}「{j['text']}」聽成「{best.get('asr', '')}」")
+        if bad and os.environ.get("ALLOW_REVIEW") != "1":
+            raise SystemExit("這幾句 Ming 候選聽寫都不對：" + "；".join(bad) + "\n在 battle.json 的 dj.tts 換這句的寫法（念錯的字換同音字、"
+                             "逗號後別放太短的句子）或換說法，刪 out/voice/ming 裡那句的 cand 再跑 dj；確定只是 ASR 聽錯就用 ALLOW_REVIEW=1 繼續。")
+        return
     for key, text in DJ["lines"].items():
         w = vd / f"tw_{key}.wav"
         if w.exists():
@@ -328,7 +386,7 @@ def audio():
     pause = barA - (HOLD + REL) - b_hit                       # A 收尾拍＋1 小節＝B 那首的第一拍
 
     # DJ 口白（dj 階段挑好的檔）
-    vb = OUT / "voice" / "bv"
+    vb = OUT / "voice" / ("ming" if DJ_TTS == "ming" else "bv")
     ref_rms = float(np.sqrt(np.mean(A["voc"][int(A["rows"][0]["start"] * SR):ia] ** 2)))
     clips = {}
     for key in DJ["lines"]:
@@ -1029,7 +1087,7 @@ def srt():
 
 
 ORDER = [songs, dj, audio, chars, scenes, frames, specs, h3, cut, review, srt]
-ALL = {f.__name__: f for f in ORDER + [songtext]}
+ALL = {f.__name__: f for f in ORDER + [songtext, yue]}
 
 if __name__ == "__main__":
     sys.path.insert(0, str(HERE))

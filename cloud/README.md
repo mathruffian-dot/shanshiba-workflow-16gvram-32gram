@@ -31,7 +31,7 @@
    ```
 5. 確認：`python cloud/colab_h3.py check` 會顯示餘額。
 
-> **預設 `start`＝完整安裝**（2026-10-11 起）：跟第一份 repo 完整版（32GB 顯卡＋64GB 記憶體）一樣，語音三環境、ComfyUI（H3、Qwen、Music 3、FlashVSR）、中文字型全部裝，約 10.5 分鐘、約 1.5 單元；G4 有 96GB 顯存，完整版的設定都跑得動。只要 H3 的人加 `--h3-only`（約 3.7 分鐘）。
+> **預設 `start`＝完整安裝**（2026-10-11 起）：跟第一份 repo 完整版（32GB 顯卡＋64GB 記憶體）一樣，語音三環境、ComfyUI（H3、Qwen、Music 3、FlashVSR、YuE2 歌曲、Ming-3.0-TTS 配音）、中文字型全部裝，約 10.5 分鐘、約 1.5 單元；G4 有 96GB 顯存，完整版的設定都跑得動。只要 H3 的人加 `--h3-only`（約 3.7 分鐘）。
 > **兩種安裝都開 2 個 ComfyUI**（2026-10-11 起，完整安裝原本只開 1 個）：各 `--reserve-vram 46`、第二個晚 30 秒開工＝實測最快（每小時 123 支，見 §4）。要單一個就 `start --instances 1`（完整安裝用環境變數 `H3_INSTANCES`）。開完可以看 `/content/h3_state.json` 有沒有列出 2 個。
 
 ## 2. 只有 H3 上雲端（本機能做首幀和配音）
@@ -50,10 +50,11 @@ python cloud/colab_h3.py stop                      # 確定不再需要 H3 才�
 ## 3. 全雲端（本機什麼都跑不動）
 
 ```
-python cloud/colab_h3.py start                     # 預設＝完整安裝：語音三環境、ComfyUI（H3、Qwen、Music 3、FlashVSR）、中文字型（舊名 full-setup 也可以）
+python cloud/colab_h3.py start                     # 預設＝完整安裝：語音三環境、ComfyUI（H3、Qwen、Music 3、FlashVSR、YuE2、Ming TTS）、中文字型（舊名 full-setup 也可以）
 python cloud/colab_h3.py smoke                     # 跑 setup/smoke_test.py，結果下載到 setup/smoke_out_colab/
 python cloud/colab_h3.py film pipeline/template_local chars masters frames   # 在雲端跑 make_film.py 指定階段，out/ 同步回本機
 python cloud/colab_h3.py film pipeline/template_local voices h3 amb edl music ending cut review
+python cloud/colab_h3.py film pipeline/my_battle yue songs dj audio   # 饒舌對決（資料夾有 battle.json 就改跑 make_battle.py），見 pipeline/template_battle/README.md
 python cloud/colab_h3.py stop
 ```
 - **2026-10-10 新 agent 實測（只看本 repo、從零）**：`full-setup` **約 10.5 分鐘**（VM 端 540 秒；10 份模型清單約 8 分鐘）→ `smoke` 約 13 分鐘 → 範本片〈被狗吃掉的作業〉分三段 `film` 共約 28 分鐘，成片 38.5 秒 1080p、−15.9 LUFS，自審全過；G4 開機到關機約 54 分鐘、**約 8 個運算單元**。Colab 硬碟約 236GB，裝完剩約 40–80GB。
