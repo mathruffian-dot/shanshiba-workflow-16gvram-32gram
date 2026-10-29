@@ -77,7 +77,8 @@ python pipeline/template_local/make_film.py h3 amb # 或直接：python cloud/hy
 - **這次修進工具的坑**：①最後一批雲端拿走 3 支、本機只剩 1 支 → 本機做完空等約 140 秒 → 改成依速度估算尾巴的分配；②每 45 秒輪詢一次 → 改 15 秒（`COLAB_POLL`）；③每批 4 支耗損占比太高 → 預設 8 支；④關機算進等待 → 改背景關機；⑤本機要用自己正式版的 `h3_shot.py` → `HYBRID_TOOLS` 指定資料夾；⑥機房每次不同（美國俄亥俄、荷蘭），都在授權排除地區；⑦中途要停：本機連 `h3_shot.py` 子程序和 ComfyUI 佇列一起清（`POST /queue {"clear": true}`、`POST /interrupt`），Colab 上的批次要另外 `stop`。
 - **什麼時候值得**：鏡頭少於 `HYBRID_MIN`（預設 8）支會自動全部本機跑（不值得等雲端開機）；約 20 支以上才明顯快。少量重抽直接本機跑。
 - **限制**：接力鏡頭（spec 有 `first_clip`）等兩邊做完才由本機照順序跑；本機顯卡跑 H3 時不能同時配音（配音要先做完）；雲端部分一樣有上面的 H3 授權地區問題。本機要先開 ComfyUI。
-- 環境變數：`HYBRID_CHUNK`（雲端每批最多幾支，預設 8）、`HYBRID_MIN`（預設 8）、`HYBRID_KEEP=1`、`HYBRID_TOOLS`、`COLAB_NAME`、`COLAB_POLL`。
+- 環境變數：`HYBRID_CHUNK`（雲端每批最多幾支，預設 8）、`HYBRID_MIN`（預設 8）、`HYBRID_KEEP=1`、`HYBRID_TOOLS`、`COLAB_NAME`、`COLAB_POLL`、`HYBRID_COLAB_HOMES`（兩個以上帳號，見下）。
+- **兩個 Colab 帳號同時跑（2026-10-29 實測）**：Colab CLI 的登入憑證放在家目錄（`~/.config/colab-cli/token.json`），一個家目錄＝一個帳號。第二個帳號：建一個空資料夾（例如 `C:\colab_home2`），在 cmd 跑 `set USERPROFILE=C:\colab_home2`、`set HOME=C:\colab_home2`、`colab usage`，瀏覽器登入第二個帳號（一次就好）。之後 `set HYBRID_COLAB_HOMES=default;C:\colab_home2`（Linux／macOS 用 `:` 分隔）→ 本機 1 個 ComfyUI＋每台 G4 各 2 個，各扣各自帳號的單元。實測 38 支 3–4.5 秒短鏡：**16.5 分鐘**（本機 10、兩台雲端 10＋18；推算全部本機約 37 分），兩個帳號各扣約 2.0 單元。G4 開機看機房：美國 216 秒、荷蘭 8.5 分（下載模型慢）→ 鏡頭少於約 20 支時開第二台不太划算。
 
 ## 4. 實測：該租哪張卡
 
@@ -162,7 +163,7 @@ python pipeline/template_local/make_film.py h3 amb # 或直接：python cloud/hy
 | 檔案 | 在哪執行 | 做什麼 |
 |---|---|---|
 | `colab_h3.py` | 你的電腦 | 開機、裝環境、批次跑 H3、保持連線、關機、全雲端 smoke／film（只用 Python 標準函式庫） |
-| `hybrid_h3.py` | 你的電腦 | 本機＋Colab 一起跑 H3（共用佇列；`H3_BACKEND=both`；尚未實測） |
+| `hybrid_h3.py` | 你的電腦 | 本機＋Colab 一起跑 H3（共用佇列；`H3_BACKEND=both`；`HYBRID_COLAB_HOMES` 可同時用兩個以上帳號） |
 | `colab_cli_windows_patch.py` | 你的電腦（Windows） | 讓 Colab CLI 在 Windows 上能啟動 |
 | `vm/setup_h3.py` | Colab | ComfyUI 0.40＋H3＋DMAD＋Veda（2026-10-16），開 1–3 個 ComfyUI（預設 2 個、錯開） |
 | `vm/run_batch.py` | Colab | 把一批鏡頭分給各個 ComfyUI 跑，寫進度、打包成品 |
