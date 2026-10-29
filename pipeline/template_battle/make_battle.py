@@ -804,6 +804,12 @@ def h3():
             print("沒做出來：", " ".join(d.name for d in miss), flush=True)
     elif H3_BACKEND == "colab":
         run([sys.executable, REPO / "cloud" / "colab_h3.py", "batch"] + [d / "spec.json" for d in todo])
+    elif os.environ.get("H3_PARALLEL") == "2" and todo:  # 全雲端模式（colab_h3.py film 設定）：2 個 ComfyUI、第二個晚 30 秒開跑（同 template_local）
+        t0 = time.time(); r = run([PYH3, REPO / "cloud" / "vm" / "parallel_h3.py"] + todo, check=False)
+        print((r.stdout + r.stderr)[-4000:], flush=True)
+        fails = [d.name for d in todo if not ((d / "clip.mp4").exists() and (d / "clip.mp4").stat().st_mtime > t0)]
+        if fails:
+            print("失敗：", fails, "（上面 [parallel_h3] 有錯誤訊息）", flush=True)
     else:
         fails = []
         for d in todo:

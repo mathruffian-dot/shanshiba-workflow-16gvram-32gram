@@ -41,7 +41,7 @@ python cloud/colab_h3.py film pipeline/my_battle specs h3            # 看 out/r
 python cloud/colab_h3.py film pipeline/my_battle cut review srt      # 看完整成片
 python cloud/colab_h3.py stop
 ```
-資料夾裡有 `battle.json`，`film` 就會改跑 `make_battle.py`。Colab 上放大用 lanczos（RTX VSR 只有 Windows）。
+資料夾裡有 `battle.json`，`film` 就會改跑 `make_battle.py`。Colab 上放大用 lanczos（RTX VSR 只有 Windows）。`h3` 這段在 VM 上開 2 個 ComfyUI、第二個晚 30 秒開跑（`cloud/vm/parallel_h3.py`，跟 template_local 同一套；2026-10-29 補上，之前對決範本在雲端只用 1 個，這條還沒在 Colab 重跑過）。
 - `film` 只同步 `out/` 回來：`yue` 選的歌放在 VM 的 `song/`，本機聽 `out/yue/<A|B>/`（排序在 `pick.json`）。要換歌就把那首轉成 `song/A.mp3` 放在本機資料夾，下一次 `film` 會一起上傳。
 - `out/` 只上傳 VM 上沒有的檔；要重做某一鏡，照樣在 `battle.json` 加 `seed_bump`／`frame_seed_bump`（刪本機的檔不會刪到 VM 上的）。
 - 跑完一定要 `stop`：閒置的 G4 每小時照扣 8.9 單元。
