@@ -4,6 +4,47 @@ YouTube 頻道「山獅霸的多重宇宙」的完整製作做法：每支片 1�
 
 > 私有分享版。原專案的本人照片、本人克隆聲音、API 金鑰、第三方素材、角色定妝照都沒有放進來。
 
+## 饒舌對決三分鐘上手
+
+兩位歷史人物各唱一整首歌互嗆、DJ 主持的 3–4 分鐘橫式影片（範例：〈微積分之戰〉牛頓 vs 萊布尼茲）。把 `agent/skills/rap-battle/` 複製到你專案的 `.claude/skills/`，跟 Claude Code 說「做一場饒舌對決」，它會帶你選題、寫歌詞、填 `battle.json`，再跑下面這些指令。**整場在 Colab 跑，你的電腦不需要顯卡**；每段跑完 `out/` 會同步回本機，看過再跑下一段。
+
+先準備 Google AI Pro（或 Colab 運算單元）＋ Colab CLI（見 [cloud/README.md](cloud/README.md)），然後：
+```
+xcopy /E /I pipeline\template_battle pipeline\my_battle      # 複製範本（macOS／Linux：cp -r pipeline/template_battle pipeline/my_battle）
+python cloud/colab_h3.py start                               # 開 G4＋完整安裝（含 YuE2、Ming-3.0-TTS），約 10 分鐘
+```
+
+### 基本版：全部在 Colab、不用任何金鑰（YuE2 生歌＋Qwen-Image 2.1 畫圖＋Ming 念 DJ）
+```
+python cloud/colab_h3.py film pipeline/my_battle yue                    # 每人抽 10 首、只留拍速對的 → 聽 out/yue/
+python cloud/colab_h3.py film pipeline/my_battle songs dj audio         # 聽 out/audio/mix.wav
+python cloud/colab_h3.py film pipeline/my_battle chars scenes frames    # 看 out/first/_sheet.jpg
+python cloud/colab_h3.py film pipeline/my_battle specs h3               # 看 out/review/clips_*.jpg
+python cloud/colab_h3.py film pipeline/my_battle cut review srt         # 看 out/cut/ 的完整成片
+python cloud/colab_h3.py stop                                           # 一定要關：閒置的 G4 每小時照扣 8.9 單元
+```
+2026-10-29 在 Colab G4 從頭實測通過：一整場約 1.5–2 小時、15–18 運算單元。YuE2 的 rap 狠勁較弱、要多抽；Qwen 畫不出雙人對峙、場景裡的字會亂碼；**Qwen-Image 2.1 只能非商業使用**。
+
+### 優化版：Suno 生歌＋Image 2.5 畫圖（要 Kie.ai 與 OpenAI 金鑰）
+在 `battle.json` 加一行 `"image_backend": "img25"`，然後：
+```
+python cloud/colab_h3.py film pipeline/my_battle songtext               # 產生 out/songtext/suno_*.txt
+set KIE_API_KEY=你的金鑰                                                  # macOS／Linux 用 export
+cd pipeline/my_battle
+python kie_suno.py submit A a1 && python kie_suno.py poll a1            # 每次 2 版，約 $0.06
+python kie_suno.py submit B b1 && python kie_suno.py poll b1            # 聽 out/suno/，挑好的存成 song/A.mp3、song/B.mp3
+cd ../..
+set OPENAI_API_KEY=你的金鑰                                               # film 會自動帶到 VM，畫面上只顯示 ***
+python cloud/colab_h3.py film pipeline/my_battle songs dj audio         # 聽 out/audio/mix.wav
+python cloud/colab_h3.py film pipeline/my_battle chars scenes frames    # 看 out/first/_sheet.jpg
+python cloud/colab_h3.py film pipeline/my_battle specs h3               # 看 out/review/clips_*.jpg
+python cloud/colab_h3.py film pipeline/my_battle cut review srt         # 看 out/cut/ 的完整成片
+python cloud/colab_h3.py stop
+```
+沒有 Kie：把 `out/songtext/suno_A_lyrics.txt`、`suno_A_style.txt` 貼到 Suno 網頁的 Custom 模式（B 同理）也一樣。Suno 編曲最豐富、rap 最兇；Image 2.5 畫得出雙人對峙和正確的字。原頻道兩場對決用的就是 Suno＋Image 2.5，但**範本的 Image 2.5 分支還沒在 Colab 從頭重跑過**。
+
+有顯卡想在本機跑：同樣的 stage 改成 `make_battle.py <stage…>`，詳見 [pipeline/template_battle/README.md](pipeline/template_battle/README.md)。
+
 ## 1. 這份是給誰的
 
 | 項目 | 內容 |

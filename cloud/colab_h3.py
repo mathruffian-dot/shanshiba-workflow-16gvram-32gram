@@ -312,13 +312,15 @@ def cmd_film(a):
     battle = (fd / "battle.json").exists()                   # 對決範本：make_battle.py 要用 Voice venv 跑（librosa、stable-ts、opencc 在那裡）
     script = "/content/AI/Voice/venv/bin/python make_battle.py" if battle else "python make_film.py"
     # 本機設的 ONLY／ALLOW_REVIEW／UPSCALE 也帶到 VM（make_film.py 用它們重做指定鏡頭、放行審查）；--env KEY=VALUE 可再加
-    extra = [f"{k}={os.environ[k]}" for k in ("ONLY", "ALLOW_REVIEW", "UPSCALE") if os.environ.get(k)] + list(a.env)
+    # OPENAI_API_KEY 也自動帶（對決範本 image_backend=img25 在 VM 上畫圖要用），印出來時遮掉
+    extra = [f"{k}={os.environ[k]}" for k in ("ONLY", "ALLOW_REVIEW", "UPSCALE", "OPENAI_API_KEY") if os.environ.get(k)] + list(a.env)
     for kv in extra:
         if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*=[^'\"]*", kv):
             sys.exit(f"--env 格式要 KEY=VALUE（不能有引號）：{kv}")
     env = VM_ENV + "".join(f" {k}='{v}'" for k, v in (kv.split("=", 1) for kv in extra))
     if extra:
-        print(f"[film] 帶到 VM 的設定：{' '.join(extra)}", flush=True)
+        shown = [kv.split("=", 1)[0] + "=***" if re.search(r"KEY|TOKEN|SECRET", kv.split("=", 1)[0]) else kv for kv in extra]
+        print(f"[film] 帶到 VM 的設定：{' '.join(shown)}", flush=True)
     # out/ 只上傳 VM 上沒有、或大小不同的檔：上一段 film 同步回來的 out/（YuE2 歌、首幀、H3 片段）VM 上本來就有，
     # 整包重傳會到幾百 MB，Colab 上傳常被斷線（2026-10-29 實測 380 MB 失敗）。out/ 以外（設定、程式、歌）每次都傳——
     # 只比大小會漏掉「改了但長度一樣」的 battle.json（同日實測）
